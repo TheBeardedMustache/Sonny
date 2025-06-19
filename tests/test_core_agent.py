@@ -1,5 +1,5 @@
 import os
-from backend.core.core_agent import run_agent, GoldAutomation
+from backend.core.core_agent import run_agent, GoldAutomation, process_request
 import pytest
 
 def test_run_agent_returns_none(monkeypatch):
@@ -27,3 +27,9 @@ def test_gold_run_codex_cli(monkeypatch):
     monkeypatch.setattr("backend.core.codex_auto.run_codex_cli", lambda command, cwd=None: expected)
     result = GoldAutomation().run_codex_cli(["codex", "--help"])
     assert result == expected
+    
+def test_process_request(monkeypatch):
+    monkeypatch.setenv("OPENAI_API_KEY", "dummy_key")
+    monkeypatch.setattr("backend.cinnabar.nlu.interpret_input", lambda text: "intent")
+    monkeypatch.setattr("backend.cinnabar.response.generate_response", lambda text: "response")
+    assert process_request("User command") == "response"

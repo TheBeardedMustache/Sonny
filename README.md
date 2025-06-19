@@ -1,37 +1,41 @@
 # Sonny
 
-Sonny is a powerful integrated agent platform offering:
+Sonny is a cutting-edge integrated agent platform leveraging multiple orchestration layers:
 
-- **Silver Path: Desktop Automation** using PyAutoGUI for mouse, keyboard, and OS interactions.
-- **Gold Path: Autonomous Coding** leveraging OpenAI/Codex API and Codex CLI for script generation and modification.
-- **Combined Regulus**: Seamlessly blend desktop automation and autonomous coding for end-to-end workflows.
+## Mercury Path: Streamlit Frontend
+- Interactive user interface for selecting and configuring agents.
+- Real-time display of operations and logs.
 
-## Features
+## Silver Path: Desktop Automation
+- GUI automation via PyAutoGUI (mouse, keyboard, window management).
 
-### Desktop Automation (Silver)
-- move_mouse(x, y, duration): Move cursor.
-- click(x, y, button): Click at position.
-- drag_mouse(x, y, duration): Drag cursor.
-- type_text(text, interval): Type strings.
-- press_keys(*keys): Send keyboard shortcuts.
-- open_application(path): Launch applications.
-- manage_window(action, window_title): Window management placeholder.
+## Gold Path: Autonomous Coding
+- Script generation and modification through OpenAI Codex API and Codex CLI.
 
-### Autonomous Coding (Gold)
-- generate_script(prompt, model, max_tokens): Generate new Python scripts.
-- modify_script(file_path, instructions, model, max_tokens): Refine existing scripts.
-- run_codex_cli(command, cwd): Execute Codex CLI.
+## Cinnabar Path: Natural Language Understanding
+- Advanced LLM-based input interpretation and response generation.
+
+## Combined Path: Lunar Venusian Regulus
+- Seamless workflows combining UI, desktop automation, code generation, and NLU.
 
 ## Setup
-1. Copy `.env.example` to `.env` and fill in `OPENAI_API_KEY`.
+1. Copy `.env.example` to `.env` and populate `OPENAI_API_KEY`.
 2. Install dependencies:
    ```bash
    pip install -r requirements.txt
    ```
-3. Run tests:
-   ```bash
-   pytest
-   ```
 
 ## Usage
-Invoke Silver or Gold paths programmatically via `backend.core.core_agent.SilverAutomation` and `GoldAutomation`.
+Launch the Streamlit app:
+```bash
+streamlit run frontend/app.py
+```
+Use the sidebar to navigate between Mercury, Silver, Gold, Cinnabar, or Combined paths.
+
+## Testing
+Run the full test suite:
+```bash
+pytest
+```
+
+> _Sonny’s unified automation schema provides a “beautiful violet sheen” of reliable, safe, and scalable agent logic._

@@ -1,0 +1,22 @@
+import os
+import openai
+import pytest
+from backend.cinnabar.response import generate_response
+
+class DummyResp2:
+    class Choice:
+        def __init__(self, content):
+            self.message = type("M", (), {"content": content})
+    def __init__(self, content):
+        self.choices = [self.Choice(content)]
+
+def test_generate_response_success(monkeypatch):
+    monkeypatch.setenv("OPENAI_API_KEY", "dummy_key")
+    monkeypatch.setattr(openai.ChatCompletion, 'create', lambda **kwargs: DummyResp2("reply_text"))
+    result = generate_response("Hello")
+    assert result == "reply_text"
+
+def test_generate_response_no_key(monkeypatch):
+    monkeypatch.delenv("OPENAI_API_KEY", raising=False)
+    with pytest.raises(RuntimeError):
+        generate_response("Hello")

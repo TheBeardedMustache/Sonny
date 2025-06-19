@@ -114,3 +114,18 @@ class GoldAutomation:
         except Exception:
             self.logger.exception("GoldAutomation.run_codex_cli failed")
             raise
+
+# Mercury & Cinnabar Integration
+from backend.cinnabar.nlu import interpret_input
+from backend.cinnabar.response import generate_response
+
+def process_request(text: str) -> str:
+    """Process a user request: interpret and respond via Cinnabar."""
+    logger.info(f"process_request received: {text}")
+    try:
+        intent = interpret_input(text)
+        result = generate_response(intent)
+        return result
+    except Exception:
+        logger.exception("Error processing request")
+        raise
