@@ -77,3 +77,40 @@ class SilverAutomation:
         self.logger.info(f"SilverAutomation.manage_window action={action}, title={window_title}")
         from backend.core.core_tasks import manage_window
         return manage_window(action, window_title)
+
+# Gold Path: Autonomous code generation via Codex CLI
+class GoldAutomation:
+    """Wrapper for autonomous code generation via Codex CLI (Gold Path)."""
+
+    def __init__(self):
+        self.logger = logger
+
+    def generate_script(self, prompt: str, model: str = "gpt-4", max_tokens: int = 1024) -> str:
+        """Generate a new Python script based on prompt."""
+        self.logger.info(f"GoldAutomation.generate_script prompt={prompt!r}")
+        from backend.core.codex_auto import generate_script as _gen
+        try:
+            return _gen(prompt, model=model, max_tokens=max_tokens)
+        except Exception:
+            self.logger.exception("GoldAutomation.generate_script failed")
+            raise
+
+    def modify_script(self, file_path: str, instructions: str, model: str = "gpt-4", max_tokens: int = 1024) -> None:
+        """Modify an existing Python script per instructions."""
+        self.logger.info(f"GoldAutomation.modify_script file={file_path}, instructions={instructions!r}")
+        from backend.core.codex_auto import modify_script as _mod
+        try:
+            return _mod(file_path, instructions, model=model, max_tokens=max_tokens)
+        except Exception:
+            self.logger.exception("GoldAutomation.modify_script failed")
+            raise
+
+    def run_codex_cli(self, command: list, cwd: str = None):
+        """Execute a Codex CLI command via subprocess."""
+        self.logger.info(f"GoldAutomation.run_codex_cli command={command}")
+        from backend.core.codex_auto import run_codex_cli as _run
+        try:
+            return _run(command, cwd=cwd)
+        except Exception:
+            self.logger.exception("GoldAutomation.run_codex_cli failed")
+            raise

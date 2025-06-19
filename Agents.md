@@ -12,3 +12,13 @@ Sonny can perform reliable desktop automation using PyAutoGUI, including:
 - press_keys(*keys): Sends keyboard shortcut combinations.
 - open_application(path): Opens an application by file path.
 - manage_window(action, window_title): Placeholder for window management operations.
+
+## Gold Path: Autonomous Code Generation
+
+Sonny can autonomously generate and modify Python scripts via the OpenAI/Codex API under supervision:
+
+- generate_script(prompt, model, max_tokens): Generates a new Python script from a textual prompt.
+- modify_script(file_path, instructions, model, max_tokens): Refines existing scripts per given instructions.
+- run_codex_cli(command, cwd): Executes Codex CLI commands for advanced workflows.
+
+All operations include robust error handling and logging to ensure safe code modifications.
