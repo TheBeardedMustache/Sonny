@@ -12,6 +12,22 @@ logging.basicConfig(
     format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
 )
 logger = logging.getLogger(__name__)
+# Symbolic reasoning state
+class SymbolicState:
+    """Tracks symbolic resonance state across operations."""
+    def __init__(self):
+        self.state = {}
+
+    def update(self, event: str, data):
+        """Record an event with associated data."""
+        self.state[event] = data
+        logger.info(f"SymbolicState updated: {event} = {data}")
+
+    def get_state(self):
+        """Retrieve a copy of the symbolic state."""
+        return dict(self.state)
+
+symbolic_state = SymbolicState()
 
 
 def run_agent():
@@ -23,6 +39,8 @@ def run_agent():
     else:
         logger.debug("OPENAI_API_KEY successfully loaded")
     logger.info("Starting core agent run")
+    # Update symbolic resonance
+    symbolic_state.update("run_agent", None)
     try:
         # Core agent logic placeholder
         pass
@@ -123,8 +141,12 @@ def process_request(text: str) -> str:
     """Process a user request: interpret and respond via Cinnabar."""
     logger.info(f"process_request received: {text}")
     try:
+        # Update symbolic resonance before processing
+        symbolic_state.update("process_request_input", text)
         intent = interpret_input(text)
+        symbolic_state.update("process_request_intent", intent)
         result = generate_response(intent)
+        symbolic_state.update("process_request_response", result)
         return result
     except Exception:
         logger.exception("Error processing request")

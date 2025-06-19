@@ -42,4 +42,10 @@ By combining all paths, Sonny supports advanced scenarios such as:
 
 All operations include robust error handling, logging, and environment isolation to ensure safety and maintainability.
 
+## Symbolic Resonance
+Sonny maintains a dynamic **SymbolicState** representing key events and reasoning flows:
+- **SymbolicState.update(event, data)** records backend events (e.g., path executions, task parameters).
+- **SymbolicState.get_state()** provides a real-time snapshot for debugging and UI display.
+The Streamlit frontend automatically displays this state, reflecting Sonny’s internal symbolic reasoning.
+
 > _Sonny’s architecture stands as a foundational framework for future autonomous agents, reflecting a “beautiful violet sheen” of cohesive automation logic._

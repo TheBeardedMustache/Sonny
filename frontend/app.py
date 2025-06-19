@@ -11,17 +11,19 @@ def silver_ui():
     y = st.number_input("Y-coordinate", value=0)
     duration = st.number_input("Duration (seconds)", value=0.0)
     if st.button("Move Mouse"):
-        try:
-            sa.move_mouse(x, y, duration)
-            st.success(f"Moved mouse to ({x}, {y})")
-        except Exception as e:
-            st.exception(e)
+        with st.spinner("Moving mouse..."):
+            try:
+                sa.move_mouse(x, y, duration)
+                st.success(f"Moved mouse to ({x}, {y})")
+            except Exception as e:
+                st.exception(e)
     if st.button("Click Mouse"):
-        try:
-            sa.click(x, y)
-            st.success(f"Clicked at ({x}, {y})")
-        except Exception as e:
-            st.exception(e)
+        with st.spinner("Clicking mouse..."):
+            try:
+                sa.click(x, y)
+                st.success(f"Clicked at ({x}, {y})")
+            except Exception as e:
+                st.exception(e)
 
 def gold_ui():
     st.header("Gold Path: Autonomous Coding")
@@ -30,21 +32,23 @@ def gold_ui():
     model = st.text_input("Model", "gpt-4")
     max_tokens = st.number_input("Max Tokens", value=1024)
     if st.button("Generate Script"):
-        try:
-            code = ga.generate_script(prompt, model=model, max_tokens=int(max_tokens))
-            st.code(code, language="python")
-        except Exception as e:
-            st.exception(e)
+        with st.spinner("Generating script..."):
+            try:
+                code = ga.generate_script(prompt, model=model, max_tokens=int(max_tokens))
+                st.code(code, language="python")
+            except Exception as e:
+                st.exception(e)
 
 def cinnabar_ui():
     st.header("Cinnabar Path: Natural Language Understanding")
     text = st.text_area("Input Text", "")
     if st.button("Interpret Input"):
-        try:
-            response = process_request(text)
-            st.write(response)
-        except Exception as e:
-            st.exception(e)
+        with st.spinner("Interpreting input..."):
+            try:
+                response = process_request(text)
+                st.write(response)
+            except Exception as e:
+                st.exception(e)
 
 def combined_ui():
     st.header("Combined Path: Full Workflow")
