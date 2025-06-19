@@ -11,7 +11,18 @@ logging.basicConfig(
     level=logging.INFO,
     format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
 )
+# Pydantic validation for process_request
+from pydantic import BaseModel, ValidationError, validator
+
 logger = logging.getLogger(__name__)
+
+class RequestInput(BaseModel):
+    text: str
+    @validator('text')
+    def not_empty(cls, v):
+        if not v or not v.strip():
+            raise ValueError("text cannot be empty")
+        return v
 # Symbolic reasoning state
 class SymbolicState:
     """Tracks symbolic resonance state across operations."""
@@ -140,14 +151,23 @@ from backend.cinnabar.response import generate_response
 def process_request(text: str) -> str:
     """Process a user request: interpret and respond via Cinnabar."""
     logger.info(f"process_request received: {text}")
+    # Validate input
+    try:
+        data = RequestInput(text=text)
+        symbolic_state.update("process_request_input", data.text)
+    except ValidationError as e:
+        logger.error(f"Validation error in process_request: {e}")
+        return None
     try:
         # Update symbolic resonance before processing
-        symbolic_state.update("process_request_input", text)
-        intent = interpret_input(text)
+        intent = interpret_input(data.text)
         symbolic_state.update("process_request_intent", intent)
         result = generate_response(intent)
         symbolic_state.update("process_request_response", result)
         return result
+    except ValidationError as e:
+        logger.error(f"Validation error in process_request intent/response: {e}")
+        return None
     except Exception:
         logger.exception("Error processing request")
         raise
