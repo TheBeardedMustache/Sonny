@@ -1,5 +1,6 @@
 # core_utils.py: Stable utility functions for the Sonny backend.
 
+
 def helper():
-    '''Auxiliary helper function.'''
+    """Auxiliary helper function."""
     pass
