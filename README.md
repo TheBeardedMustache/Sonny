@@ -18,6 +18,13 @@ Sonny is a cutting-edge integrated agent platform leveraging multiple orchestrat
 ## Combined Path: Lunar Venusian Regulus
 - Seamless workflows combining UI, desktop automation, code generation, and NLU.
 
+## Symbolic Resonance
+Sonny tracks its symbolic reasoning via a **SymbolicState**:
+- Records key events and their data for transparency.
+- Exposed in the UI for real-time introspection and debugging.
+
+This symbolic resonance ensures clear, trustworthy automation and reasoning.
+
 ## Setup
 1. Copy `.env.example` to `.env` and populate `OPENAI_API_KEY`.
 2. Install dependencies:

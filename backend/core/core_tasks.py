@@ -5,6 +5,7 @@ import logging
 import os
 import subprocess
 import pyautogui
+from backend.core.core_agent import symbolic_state
 
 logger = logging.getLogger(__name__)
 
@@ -14,6 +15,7 @@ def handle_task(task):
     logger.info("Handling task: %s", task)
     try:
         # Core task processing placeholder
+        symbolic_state.update("handle_task", task)
         pass
     except Exception:
         logger.exception("Error while handling task: %s", task)
@@ -24,6 +26,7 @@ def move_mouse(x, y, duration=0):
     """Move mouse cursor to (x, y) over optional duration."""
     logger.info(f"move_mouse: moving to ({x}, {y}) over {duration}s")
     try:
+        symbolic_state.update("move_mouse", {"x": x, "y": y, "duration": duration})
         pyautogui.moveTo(x, y, duration=duration)
     except Exception:
         logger.exception("Error in move_mouse")
@@ -33,6 +36,7 @@ def click(x=None, y=None, button='left'):
     """Click mouse at (x, y) with specified button."""
     logger.info(f"click: button={button} at ({x}, {y})")
     try:
+        symbolic_state.update("click", {"x": x, "y": y, "button": button})
         pyautogui.click(x, y, button=button)
     except Exception:
         logger.exception("Error in click")
@@ -42,6 +46,7 @@ def drag_mouse(x, y, duration=0):
     """Drag mouse to (x, y) over optional duration."""
     logger.info(f"drag_mouse: dragging to ({x}, {y}) over {duration}s")
     try:
+        symbolic_state.update("drag_mouse", {"x": x, "y": y, "duration": duration})
         pyautogui.dragTo(x, y, duration=duration)
     except Exception:
         logger.exception("Error in drag_mouse")
@@ -51,6 +56,7 @@ def type_text(text, interval=0):
     """Type text string with optional interval."""
     logger.info(f"type_text: typing '{text}'")
     try:
+        symbolic_state.update("type_text", {"text": text, "interval": interval})
         pyautogui.typewrite(text, interval=interval)
     except Exception:
         logger.exception("Error in type_text")
@@ -60,6 +66,7 @@ def press_keys(*keys):
     """Press key combination."""
     logger.info(f"press_keys: {keys}")
     try:
+        symbolic_state.update("press_keys", {"keys": keys})
         pyautogui.hotkey(*keys)
     except Exception:
         logger.exception("Error in press_keys")
@@ -69,6 +76,7 @@ def open_application(path):
     """Open an application by given path."""
     logger.info(f"open_application: {path}")
     try:
+        symbolic_state.update("open_application", {"path": path})
         if os.name == 'nt':
             os.startfile(path)
         else:
@@ -80,4 +88,5 @@ def open_application(path):
 def manage_window(action, window_title=None):
     """Manage window operations (placeholder)."""
     logger.info(f"manage_window: action={action}, window_title={window_title}")
+    symbolic_state.update("manage_window", {"action": action, "window_title": window_title})
     # Implementation depends on window management libraries
