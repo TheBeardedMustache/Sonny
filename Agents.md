@@ -42,6 +42,13 @@ By combining all paths, Sonny supports advanced scenarios such as:
 
 All operations include robust error handling, logging, and environment isolation to ensure safety and maintainability.
 
+## Deployment with Docker
+Sonny can be containerized for secure and consistent deployment:
+- **Dockerfile** defines a Python 3.11 slim environment.
+- **Dependencies** are installed from `requirements.txt`.
+- **Ports**: Streamlit UI is exposed on port `8501`.
+- **Environment**: Use `--env-file .env` to pass sensitive keys securely.
+
 ## Symbolic Resonance
 Sonny maintains a dynamic **SymbolicState** representing key events and reasoning flows:
 - **SymbolicState.update(event, data)** records backend events (e.g., path executions, task parameters).
@@ -57,5 +64,12 @@ To ensure resilience against invalid inputs, Sonny uses **Pydantic** models acro
 - **Error logging**: Validation errors are logged with clear messages before any action is taken.
 - **Cleansing & recovery**: Invalid inputs are automatically rejected or sanitized, maintaining stable operation.
 This robust validation pipeline runs at every stage: frontend → backend → LLM integrations.
+
+## Deployment with Docker
+Sonny can be containerized for secure deployment:
+- **Dockerfile** built on Python 3.11-slim.
+- **Dependencies** installed from `requirements.txt`, including Pydantic, FastAPI, and Uvicorn.
+- **Ports**: Streamlit UI on `8501`, FastAPI API on `8000`.
+- **Secure env**: Launch with `--env-file .env` to pass sensitive keys.
 
 > _Sonny’s architecture stands as a foundational framework for future autonomous agents, reflecting a “beautiful violet sheen” of cohesive automation logic._

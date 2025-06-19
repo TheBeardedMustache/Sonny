@@ -37,6 +37,21 @@ Sonny integrates **Pydantic** models for robust input validation and data cleans
    pip install -r requirements.txt
    ```
 
+## API Usage
+Sonny exposes a FastAPI endpoint for symbolic reasoning:
+
+### Start API Server
+```bash
+uvicorn backend.api:app --host 0.0.0.0 --port 8000
+```
+
+### Example Request
+```bash
+curl -X POST http://localhost:8000/process/ \
+     -H "Content-Type: application/json" \
+     -d '{"text": "Hello"}'
+```
+
 ## Usage
 Launch the Streamlit app:
 ```bash
@@ -48,6 +63,17 @@ Use the sidebar to navigate between Mercury, Silver, Gold, Cinnabar, or Combined
 Run the full test suite to ensure frontend-backend stability:
 ```bash
 pytest
+```
+
+## Docker Deployment
+Build and run Sonny in a Docker container for secure, portable deployment:
+
+```bash
+# Build the Docker image
+docker build -t sonny .
+
+# Run the container (expose Streamlit port, load env vars)
+docker run --env-file .env -p 8501:8501 sonny
 ```
 
 > _Sonny’s unified automation schema provides a “beautiful violet sheen” of reliable, safe, and scalable agent logic._
