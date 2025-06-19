@@ -2,10 +2,11 @@
 
 
 import logging
-logger = logging.getLogger(__name__)
 import os
 import subprocess
 import pyautogui
+
+logger = logging.getLogger(__name__)
 
 def handle_task(task):
     """Processes a given task for the Sonny agent."""

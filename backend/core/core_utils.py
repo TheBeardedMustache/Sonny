@@ -5,10 +5,10 @@
 # Load environment variables
 import os
 from dotenv import load_dotenv
+import logging
 
 load_dotenv()
 
-import logging
 logger = logging.getLogger(__name__)
 
 def helper():

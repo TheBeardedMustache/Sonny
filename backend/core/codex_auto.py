@@ -1,8 +1,9 @@
 # codex_auto.py: Utilities for autonomous code generation via OpenAI API and Codex CLI.
 import os
-from dotenv import load_dotenv
-import logging
 import subprocess
+import logging
+
+from dotenv import load_dotenv
 import openai
 
 load_dotenv()
