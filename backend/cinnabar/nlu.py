@@ -3,6 +3,7 @@ import os
 import logging
 import openai
 from dotenv import load_dotenv
+from backend.core.core_agent import symbolic_state
 
 load_dotenv()
 logger = logging.getLogger(__name__)
@@ -49,7 +50,9 @@ def interpret_input(text: str, model: str = "gpt-4", max_tokens: int = 256) -> s
             temperature=0.0,
             n=1,
         )
-        return response.choices[0].message.content
+        content = response.choices[0].message.content
+        symbolic_state.update("interpret_input", content)
+        return content
     except Exception:
         logger.exception("Error interpreting input")
         raise
