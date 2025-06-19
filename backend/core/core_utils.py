@@ -1,6 +1,29 @@
+
+
 # core_utils.py: Stable utility functions for the Sonny backend.
 
+# Load environment variables
+import os
+from dotenv import load_dotenv
+
+load_dotenv()
+
+import logging
+logging.basicConfig(
+    level=logging.INFO,
+    format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
+)
+logger = logging.getLogger(__name__)
 
 def helper():
     """Auxiliary helper function."""
-    pass
+    # Check environment variable
+    config_value = os.getenv("OTHER_SETTING", "default")
+    logger.debug("Helper config OTHER_SETTING: %s", config_value)
+    logger.info("Running helper utility")
+    try:
+        # Utility logic placeholder
+        pass
+    except Exception:
+        logger.exception("Error in helper utility")
+        raise
