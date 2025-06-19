@@ -7,10 +7,6 @@ import openai
 
 load_dotenv()
 
-logging.basicConfig(
-    level=logging.INFO,
-    format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
-)
 logger = logging.getLogger(__name__)
 
 def generate_script(prompt: str, model: str = "gpt-4", max_tokens: int = 1024) -> str:
