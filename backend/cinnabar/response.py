@@ -3,6 +3,7 @@ import os
 import logging
 import openai
 from dotenv import load_dotenv
+from backend.core.core_agent import symbolic_state
 from pydantic import BaseModel, ValidationError, validator
 
 class ResponseInput(BaseModel):
@@ -49,7 +50,9 @@ def generate_response(text: str, model: str = "gpt-4", max_tokens: int = 512) ->
             temperature=0.7,
             n=1,
         )
-        return response.choices[0].message.content
+        content = response.choices[0].message.content
+        symbolic_state.update("generate_response", content)
+        return content
     except Exception:
         logger.exception("Error generating response")
         raise
