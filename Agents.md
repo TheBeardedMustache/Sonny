@@ -1,4 +1,36 @@
 # Agents
+Comprehensive overview of Sonny’s agent pathways and capabilities.
+
+## Key Features
+- **Silver Path (Desktop Automation)**: Reliable GUI interactions via PyAutoGUI.
+- **Gold Path (Autonomous Coding)**: Dynamic script generation and refinement via OpenAI Codex API and Codex CLI.
+- **Combined Path (Lunar Venusian Regulus)**: Seamless end-to-end workflows blending desktop automation with autonomous coding.
+
+## Silver Path: Desktop Automation
+Sonny can automate desktop environments with:
+- move_mouse(x, y, duration): Move the cursor.
+- click(x, y, button): Mouse clicks.
+- drag_mouse(x, y, duration): Cursor dragging.
+- type_text(text, interval): Automated typing.
+- press_keys(*keys): Keyboard shortcuts.
+- open_application(path): Launch applications.
+- manage_window(action, window_title): Window management hooks.
+
+## Gold Path: Autonomous Code Generation
+Sonny can generate and update code safely:
+- generate_script(prompt, model, max_tokens): Create new Python scripts.
+- modify_script(file_path, instructions, model, max_tokens): Refine existing scripts.
+- run_codex_cli(command, cwd): Execute Codex CLI commands.
+
+## Combined Path: Lunar Venusian Regulus
+By combining Silver and Gold paths, Sonny supports advanced scenarios such as:
+- Generating a testing script and deploying it via desktop automation.
+- Updating its own code, then launching tools automatically.
+
+All operations include robust error handling, logging, and environment isolation to ensure safety and maintainability.
+
+> _Sonny’s architecture is a foundational framework for future agents, reflecting a “beautiful violet sheen” of cohesive automation logic._
+# Agents
 Documentation of available agents and their roles.
 
 ## Silver Path: Desktop Automation

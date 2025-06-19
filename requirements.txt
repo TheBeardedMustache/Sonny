@@ -2,6 +2,5 @@ streamlit
 pyautogui
 openai
 requests
-logging
 python-dotenv
 pytest
