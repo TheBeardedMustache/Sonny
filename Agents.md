@@ -9,10 +9,10 @@ Comprehensive overview of Sonny’s agent pathways and capabilities.
 - **Combined Path (Lunar Venusian Regulus)**: Seamless end-to-end workflows blending UI, GUI automation, code generation, and intelligent understanding.
 
 ## Mercury Path: Streamlit Frontend
-Sonny provides a user-friendly UI to:
-- Select automation or coding paths.
-- Configure parameters (coordinates, prompts, file paths).
-- View results and system logs in real time.
+Sonny provides a refined, responsive UI to:
+- Select and configure automation or coding paths.
+- Enter parameters (coordinates, prompts, file paths) with validation.
+- Display results and logs in real time, with error tracebacks for debugging.
 
 ## Silver Path: Desktop Automation
 Sonny can automate desktop environments with:

@@ -8,13 +8,13 @@ def main():
     st.subheader("Welcome to Sonny's Mercury Frontend")
     st.markdown(
         """
-        Use the sidebar to select an automation path:
-        - **Mercury**: Frontend interface
-        - **Silver**: Desktop Automation
-        - **Gold**: Autonomous Coding
-        - **Cinnabar**: Natural Language Understanding
-        - **Combined**: Full Automation Workflow
-        """
+Use the sidebar to select an automation path:
+- **Mercury**: Frontend interface
+- **Silver**: Desktop Automation
+- **Gold**: Autonomous Coding
+- **Cinnabar**: Natural Language Understanding
+- **Combined**: Full Automation Workflow
+"""
     )
 
 if __name__ == '__main__':

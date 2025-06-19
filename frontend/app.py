@@ -1,7 +1,7 @@
 # app.py: Entry point for the Sonny frontend application using Streamlit.
 
 import streamlit as st
-from Home_Page import main as home_page
+from frontend.Home_Page import main as home_page
 from backend.core.core_agent import SilverAutomation, GoldAutomation, process_request
 
 def silver_ui():
@@ -15,13 +15,13 @@ def silver_ui():
             sa.move_mouse(x, y, duration)
             st.success(f"Moved mouse to ({x}, {y})")
         except Exception as e:
-            st.error(f"Error: {e}")
+            st.exception(e)
     if st.button("Click Mouse"):
         try:
             sa.click(x, y)
             st.success(f"Clicked at ({x}, {y})")
         except Exception as e:
-            st.error(f"Error: {e}")
+            st.exception(e)
 
 def gold_ui():
     st.header("Gold Path: Autonomous Coding")
@@ -34,7 +34,7 @@ def gold_ui():
             code = ga.generate_script(prompt, model=model, max_tokens=int(max_tokens))
             st.code(code, language="python")
         except Exception as e:
-            st.error(f"Error: {e}")
+            st.exception(e)
 
 def cinnabar_ui():
     st.header("Cinnabar Path: Natural Language Understanding")
@@ -44,7 +44,7 @@ def cinnabar_ui():
             response = process_request(text)
             st.write(response)
         except Exception as e:
-            st.error(f"Error: {e}")
+            st.exception(e)
 
 def combined_ui():
     st.header("Combined Path: Full Workflow")
