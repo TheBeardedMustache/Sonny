@@ -9,5 +9,6 @@ def test_home_page_render(monkeypatch):
     monkeypatch.setattr(st, 'title', lambda x: None)
     monkeypatch.setattr(st, 'subheader', lambda x: None)
     monkeypatch.setattr(st, 'markdown', lambda x: None)
+    monkeypatch.setattr(st, 'json', lambda x: None)
     # Should not raise
     home_page()
