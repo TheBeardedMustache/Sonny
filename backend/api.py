@@ -6,6 +6,14 @@ from backend.core.core_agent import process_request
 
 app = FastAPI(title="Sonny API", version="1.0")
 
+@app.on_event("startup")
+def on_startup():
+    logger.info("Sonny API Service starting up...")
+
+@app.on_event("shutdown")
+def on_shutdown():
+    logger.info("Sonny API Service shutting down gracefully...")
+
 class ProcessRequest(BaseModel):
     text: str
 

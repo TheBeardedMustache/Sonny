@@ -48,6 +48,19 @@ Sonny can be containerized for secure and consistent deployment:
 - **Dependencies** are installed from `requirements.txt`.
 - **Ports**: Streamlit UI is exposed on port `8501`.
 - **Environment**: Use `--env-file .env` to pass sensitive keys securely.
+ 
+## Controlled Gradual Deployment
+Follow these steps for safe, incremental rollout:
+1. **Local Smoke Test**: Run a single Docker container locally and verify key endpoints:
+   - Streamlit UI: `http://localhost:8501/`
+   - API: `http://localhost:8000/process/`
+2. **Gradually Increase Load**: Use Locust (`locustfile.py`) to simulate user traffic:
+   ```bash
+   locust -f locustfile.py --host http://localhost:8000
+   ```
+   - Begin with `--users 1 --spawn-rate 1`, then step up in increments.
+3. **Monitor & Validate**: Observe logs and `SymbolicState` in UI, ensuring stability and acceptable response times.
+4. **Scale Out**: Deploy on orchestration platforms (e.g., Kubernetes) with health checks, auto-scaling, and safe rollbacks.
 
 ## Symbolic Resonance
 Sonny maintains a dynamic **SymbolicState** representing key events and reasoning flows:
