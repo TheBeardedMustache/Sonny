@@ -74,6 +74,12 @@ docker build -t sonny .
 
 # Run the container (expose Streamlit port, load env vars)
 docker run --env-file .env -p 8501:8501 -p 8000:8000 sonny
+
+## Preservation & Reuse
+Sonny’s foundational logic is modularized and available for reuse:
+- See `instructions/Reusable_Modules.md` for a catalog of reusable components.
+- Templates are provided in `reusable_logic_templates/` with usage examples.
+Use these modules and templates to bootstrap new autonomous agents efficiently.
 ```
 
 ## Controlled Gradual Deployment
