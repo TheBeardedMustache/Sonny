@@ -73,7 +73,32 @@ Build and run Sonny in a Docker container for secure, portable deployment:
 docker build -t sonny .
 
 # Run the container (expose Streamlit port, load env vars)
-docker run --env-file .env -p 8501:8501 sonny
+docker run --env-file .env -p 8501:8501 -p 8000:8000 sonny
+
+## Preservation & Reuse
+Sonny’s foundational logic is modularized and available for reuse:
+- See `instructions/Reusable_Modules.md` for a catalog of reusable components.
+- Templates are provided in `reusable_logic_templates/` with usage examples.
+Use these modules and templates to bootstrap new autonomous agents efficiently.
+```
+
+## Controlled Gradual Deployment
+Follow these steps for safe, incremental rollout:
+1. **Local smoke test**: Run with a single container on localhost:
+   ```bash
+   docker run --env-file .env -p 8501:8501 -p 8000:8000 sonny
+   ```
+2. **Monitor metrics**: Check logs (`docker logs -f <container>`) and ensure all endpoints respond.
+3. **Scale users**: Increase load gradually using Locust (see `locustfile.py`) with commands:
+   ```bash
+   locust -f locustfile.py --host http://localhost:8000
+   ```
+   Start with 1 user, spawn rate 1, then increment.
+4. **Production rollout**: Deploy on orchestration platform (Docker Swarm/Kubernetes) with health checks and auto-scaling.
+
+## Safe Shutdown & Recovery
+1. **Shutdown**: Use `CTRL+C` or `docker stop`; FastAPI logs shutdown events and cleans up.
+2. **Recovery**: Restart container with `docker start` or re-run `docker run` command.
 ```
 
 > _Sonny’s unified automation schema provides a “beautiful violet sheen” of reliable, safe, and scalable agent logic._
