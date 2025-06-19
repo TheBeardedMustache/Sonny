@@ -1,13 +1,18 @@
 # nlu.py: Natural language understanding utilities via OpenAI API.
-import os
 import logging
 import openai
-from dotenv import load_dotenv
+from backend.cinnabar.base import LLMClient
 from backend.core.core_agent import symbolic_state
 
-load_dotenv()
 logger = logging.getLogger(__name__)
-from pydantic import BaseModel, ValidationError, validator
+# Initialize LLM client for interpretation
+_nlu_client = LLMClient(
+    system_prompt="You are a helpful assistant for interpreting user commands.",
+    model="gpt-4",
+    max_tokens=256,
+    temperature=0.0,
+    symbolic_state=symbolic_state,
+)
 
 class NLUInput(BaseModel):
     text: str
@@ -26,33 +31,7 @@ class NLUInput(BaseModel):
             raise ValueError("max_tokens must be positive")
         return v
 
-def interpret_input(text: str, model: str = "gpt-4", max_tokens: int = 256) -> str:
+def interpret_input(text: str) -> str:
     """Interpret user's natural language input and extract intent or structured data."""
-    api_key = os.getenv("OPENAI_API_KEY")
-    if not api_key:
-        raise RuntimeError("OPENAI_API_KEY not set")
-    openai.api_key = api_key
-    # Validate input
-    try:
-        params = NLUInput(text=text, model=model, max_tokens=max_tokens)
-    except ValidationError as e:
-        logger.error(f"Validation error in interpret_input: {e}")
-        raise
-    logger.info(f"Interpreting input: {params.text}")
-    try:
-        response = openai.ChatCompletion.create(
-            model=model,
-            messages=[
-                {"role": "system", "content": "You are a helpful assistant for interpreting user commands."},
-                {"role": "user", "content": text},
-            ],
-            max_tokens=max_tokens,
-            temperature=0.0,
-            n=1,
-        )
-        content = response.choices[0].message.content
-        symbolic_state.update("interpret_input", content)
-        return content
-    except Exception:
-        logger.exception("Error interpreting input")
-        raise
+    logger.info(f"interpret_input received: {text!r}")
+    return _nlu_client.chat(text)

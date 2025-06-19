@@ -48,6 +48,9 @@ Sonny maintains a dynamic **SymbolicState** representing key events and reasonin
 - **SymbolicState.get_state()** provides a real-time snapshot for debugging and UI display.
 The Streamlit frontend automatically displays this state, reflecting Sonny’s internal symbolic reasoning.
 
+## UI Symbolic Resonance Display
+Each UI path (Silver, Gold, Cinnabar, Combined) now presents the current `SymbolicState` as a JSON panel, providing seamless insight into Sonny’s internal reasoning and fostering transparency.
+
 ## Structured Validation & Cleansing
 To ensure resilience against invalid inputs, Sonny uses **Pydantic** models across backend components:
 - **Input validation**: All user-provided parameters (coordinates, text, prompts) are parsed and validated via Pydantic.
