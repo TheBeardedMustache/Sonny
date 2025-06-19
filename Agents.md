@@ -48,4 +48,11 @@ Sonny maintains a dynamic **SymbolicState** representing key events and reasonin
 - **SymbolicState.get_state()** provides a real-time snapshot for debugging and UI display.
 The Streamlit frontend automatically displays this state, reflecting Sonny’s internal symbolic reasoning.
 
+## Structured Validation & Cleansing
+To ensure resilience against invalid inputs, Sonny uses **Pydantic** models across backend components:
+- **Input validation**: All user-provided parameters (coordinates, text, prompts) are parsed and validated via Pydantic.
+- **Error logging**: Validation errors are logged with clear messages before any action is taken.
+- **Cleansing & recovery**: Invalid inputs are automatically rejected or sanitized, maintaining stable operation.
+This robust validation pipeline runs at every stage: frontend → backend → LLM integrations.
+
 > _Sonny’s architecture stands as a foundational framework for future autonomous agents, reflecting a “beautiful violet sheen” of cohesive automation logic._

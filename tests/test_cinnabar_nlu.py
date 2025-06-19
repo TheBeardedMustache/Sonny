@@ -20,3 +20,11 @@ def test_interpret_input_no_key(monkeypatch):
     monkeypatch.delenv("OPENAI_API_KEY", raising=False)
     with pytest.raises(RuntimeError):
         interpret_input("Test")
+    
+def test_interpret_input_empty_text(caplog):
+    caplog.set_level(logging.ERROR)
+    import pytest
+    from backend.cinnabar.nlu import interpret_input
+    with pytest.raises(ValueError):
+        interpret_input("", model="gpt-4", max_tokens=10)
+    assert "Validation error in interpret_input" in caplog.text

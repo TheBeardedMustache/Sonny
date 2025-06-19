@@ -20,3 +20,11 @@ def test_generate_response_no_key(monkeypatch):
     monkeypatch.delenv("OPENAI_API_KEY", raising=False)
     with pytest.raises(RuntimeError):
         generate_response("Hello")
+    
+def test_generate_response_empty_text(caplog):
+    caplog.set_level(logging.ERROR)
+    import pytest
+    from backend.cinnabar.response import generate_response
+    with pytest.raises(ValueError):
+        generate_response("", model="gpt-4", max_tokens=10)
+    assert "Validation error in generate_response" in caplog.text

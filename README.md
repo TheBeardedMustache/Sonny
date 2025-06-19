@@ -24,6 +24,11 @@ Sonny tracks its symbolic reasoning via a **SymbolicState**:
 - Exposed in the UI for real-time introspection and debugging.
 
 This symbolic resonance ensures clear, trustworthy automation and reasoning.
+## Structured Validation & Cleansing
+Sonny integrates **Pydantic** models for robust input validation and data cleansing:
+- **Coordinates & parameters**: Validates numeric ranges and types before automation actions.
+- **Text & prompts**: Ensures non-empty strings and safe values for LLM interactions.
+- **Error handling**: Logs validation failures and prevents invalid operations, preserving system stability.
 
 ## Setup
 1. Copy `.env.example` to `.env` and populate `OPENAI_API_KEY`.

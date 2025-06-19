@@ -3,6 +3,24 @@ import os
 import logging
 import openai
 from dotenv import load_dotenv
+from pydantic import BaseModel, ValidationError, validator
+
+class ResponseInput(BaseModel):
+    text: str
+    model: str = "gpt-4"
+    max_tokens: int = 512
+
+    @validator('text')
+    def not_empty(cls, v):
+        if not v or not v.strip():
+            raise ValueError("text cannot be empty")
+        return v
+
+    @validator('max_tokens')
+    def positive_tokens(cls, v):
+        if v <= 0:
+            raise ValueError("max_tokens must be positive")
+        return v
 
 load_dotenv()
 logger = logging.getLogger(__name__)
@@ -13,7 +31,13 @@ def generate_response(text: str, model: str = "gpt-4", max_tokens: int = 512) ->
     if not api_key:
         raise RuntimeError("OPENAI_API_KEY not set")
     openai.api_key = api_key
-    logger.info(f"Generating response for input: {text}")
+    # Validate input
+    try:
+        params = ResponseInput(text=text, model=model, max_tokens=max_tokens)
+    except ValidationError as e:
+        logger.error(f"Validation error in generate_response: {e}")
+        raise
+    logger.info(f"Generating response for input: {params.text}")
     try:
         response = openai.ChatCompletion.create(
             model=model,
