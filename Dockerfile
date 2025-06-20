@@ -24,5 +24,6 @@ CMD ["sh", "-c", \
      streamlit run frontend/app.py --server.port=8501 --server.address=0.0.0.0"]
 
 # Healthcheck to ensure API is responsive
+# Healthcheck ensures API availability
 HEALTHCHECK --interval=30s --timeout=5s \
   CMD curl -f http://localhost:8000/ || exit 1
