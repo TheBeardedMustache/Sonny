@@ -1,0 +1,16 @@
+version: '3.8'
+services:
+  sonny:
+    build: .
+    image: sonny
+    ports:
+      - "8501:8501"  # Streamlit UI port
+      - "8000:8000"  # API port
+    environment:
+      - OPENAI_API_KEY
+      - OTHER_SETTING
+    deploy:
+      resources:
+        limits:
+          cpus: '0.50'
+          memory: 512M
