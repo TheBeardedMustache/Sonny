@@ -4,6 +4,9 @@ FROM python:3.11-slim
 # Set environment variables
 ENV PYTHONUNBUFFERED=1
 
+# Install curl explicitly for healthcheck
+RUN apt-get update && apt-get install -y curl && rm -rf /var/lib/apt/lists/*
+
 # Create and set working directory
 WORKDIR /app
 
@@ -23,7 +26,6 @@ CMD ["sh", "-c", \
     "uvicorn backend.api:app --host 0.0.0.0 --port 8000 & \
      streamlit run frontend/app.py --server.port=8501 --server.address=0.0.0.0"]
 
-# Healthcheck to ensure API is responsive
 # Healthcheck ensures API availability
 HEALTHCHECK --interval=30s --timeout=5s \
   CMD curl -f http://localhost:8000/ || exit 1
