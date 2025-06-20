@@ -30,4 +30,13 @@ This document lists and describes modular, reusable components extracted from So
   - `GoldAutomation`: Methods for code generation and CLI interactions via LLMClient.
   - `process_request(text: str) -> str`: Orchestrates NLU interpretation and LLM response.
 
-Each module above is designed for independent reuse. Refer to the `reusable_logic_templates/` directory for template files.
+Each module above is designed for independent reuse. The following folders now contain reusable logic and templates:
+
+- `residual_modules/`: distilled, production-ready modules:
+  - `symbolic_state.py`
+  - `llm_client.py`
+  - `automation.py`
+- `fresh_regulus_templates/`: foundational agent wrapper templates:
+  - `agent_wrapper_template.py`
+
+Refer to these directories for examples of how to integrate and reuse Sonny’s core components.
