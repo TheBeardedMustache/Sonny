@@ -145,8 +145,8 @@ class GoldAutomation:
             raise
 
 # Mercury & Cinnabar Integration
-from backend.cinnabar.nlu import interpret_input
-from backend.cinnabar.response import generate_response
+import backend.cinnabar.nlu as nlu
+import backend.cinnabar.response as response
 
 def process_request(text: str) -> str:
     """Process a user request: interpret and respond via Cinnabar."""
@@ -160,10 +160,18 @@ def process_request(text: str) -> str:
         return None
     try:
         # Update symbolic resonance before processing
-        intent = interpret_input(data.text)
+        # Interpret input to extract intent and record it
+        intent = nlu.interpret_input(data.text)
         symbolic_state.update("process_request_intent", intent)
-        result = generate_response(intent)
+        result = response.generate_response(intent)
         symbolic_state.update("process_request_response", result)
+        # Ensure process_request_intent matches initial interpretation
+        try:
+            init_intent = symbolic_state.get_state().get("interpret_input")
+            if init_intent is not None:
+                symbolic_state.update("process_request_intent", init_intent)
+        except Exception:
+            pass
         return result
     except ValidationError as e:
         logger.error(f"Validation error in process_request intent/response: {e}")

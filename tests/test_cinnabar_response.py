@@ -1,6 +1,7 @@
 import os
 import openai
 import pytest
+import logging
 from backend.cinnabar.response import generate_response
 
 class DummyResp2:
