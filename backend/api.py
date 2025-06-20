@@ -24,6 +24,10 @@ def process_endpoint(req: ProcessRequest):
     if result is None:
         raise HTTPException(status_code=400, detail="Invalid or empty input")
     return {"response": result}
+@app.get("/")
+def read_root():
+    """Healthcheck and root endpoint."""
+    return {"status": "Sonny API is running"}
 
 if __name__ == "__main__":
     import uvicorn
