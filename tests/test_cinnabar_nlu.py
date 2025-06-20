@@ -1,6 +1,7 @@
 import os
 import openai
 import pytest
+import logging
 from backend.cinnabar.nlu import interpret_input
 
 class DummyResp:

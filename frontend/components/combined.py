@@ -16,6 +16,8 @@ def combined_ui():
     if st.button("Generate Proactive Task"):
         try:
             task = am.generate_proactive_task()
+            # Ensure symbolic state records the proactive task when patched
+            symbolic_state.update("proactive_task", task)
             st.success("Proactive Task Generated:")
             st.code(task, language="python")
         except Exception as e:

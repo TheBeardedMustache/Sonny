@@ -37,7 +37,7 @@ def generate_response(text: str, model: str = "gpt-4", max_tokens: int = 512) ->
         params = ResponseInput(text=text, model=model, max_tokens=max_tokens)
     except ValidationError as e:
         logger.error(f"Validation error in generate_response: {e}")
-        raise
+        raise ValueError(str(e))
     logger.info(f"Generating response for input: {params.text}")
     try:
         response = openai.ChatCompletion.create(

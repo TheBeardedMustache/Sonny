@@ -5,6 +5,7 @@ import logging
 import os
 import subprocess
 import pyautogui
+from pydantic import BaseModel, ValidationError, validator
 from backend.core.core_agent import symbolic_state
 
 logger = logging.getLogger(__name__)
@@ -24,6 +25,26 @@ def handle_task(task):
 # PyAutoGUI-based automation functions
 def move_mouse(x, y, duration=0):
     """Move mouse cursor to (x, y) over optional duration."""
+    # Validate inputs
+    class _MoveMouseInput(BaseModel):
+        x: int
+        y: int
+        duration: float
+        @validator('x', 'y')
+        def non_negative_coords(cls, v):
+            if v < 0:
+                raise ValueError('coordinates must be non-negative')
+            return v
+        @validator('duration')
+        def non_negative_duration(cls, v):
+            if v < 0:
+                raise ValueError('duration must be non-negative')
+            return v
+    try:
+        _MoveMouseInput(x=x, y=y, duration=duration)
+    except ValidationError as e:
+        logger.error(f"Validation error in move_mouse: {e}")
+        return None
     logger.info(f"move_mouse: moving to ({x}, {y}) over {duration}s")
     try:
         symbolic_state.update("move_mouse", {"x": x, "y": y, "duration": duration})
@@ -34,6 +55,26 @@ def move_mouse(x, y, duration=0):
 
 def click(x=None, y=None, button='left'):
     """Click mouse at (x, y) with specified button."""
+    # Validate inputs
+    class _ClickInput(BaseModel):
+        x: int
+        y: int
+        button: str
+        @validator('x', 'y')
+        def non_negative_coords(cls, v):
+            if v is None or v < 0:
+                raise ValueError('coordinates must be non-negative')
+            return v
+        @validator('button')
+        def valid_button(cls, v):
+            if v not in ('left', 'right', 'middle'):
+                raise ValueError('button must be left, right, or middle')
+            return v
+    try:
+        _ClickInput(x=x, y=y, button=button)
+    except ValidationError as e:
+        logger.error(f"Validation error in click: {e}")
+        return None
     logger.info(f"click: button={button} at ({x}, {y})")
     try:
         symbolic_state.update("click", {"x": x, "y": y, "button": button})
@@ -54,6 +95,25 @@ def drag_mouse(x, y, duration=0):
 
 def type_text(text, interval=0):
     """Type text string with optional interval."""
+    # Validate inputs
+    class _TypeTextInput(BaseModel):
+        text: str
+        interval: float
+        @validator('text')
+        def non_empty_text(cls, v):
+            if not v or not v.strip():
+                raise ValueError('text cannot be empty')
+            return v
+        @validator('interval')
+        def non_negative_interval(cls, v):
+            if v < 0:
+                raise ValueError('interval must be non-negative')
+            return v
+    try:
+        _TypeTextInput(text=text, interval=interval)
+    except ValidationError as e:
+        logger.error(f"Validation error in type_text: {e}")
+        return None
     logger.info(f"type_text: typing '{text}'")
     try:
         symbolic_state.update("type_text", {"text": text, "interval": interval})
