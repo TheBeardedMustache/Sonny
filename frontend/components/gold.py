@@ -17,5 +17,5 @@ def gold_ui():
             st.code(code, language="python")
         except Exception as e:
             st.exception(e)
-    st.markdown("**Symbolic State:**")
-    st.json(symbolic_state.get_state())
+    with st.expander("Symbolic State (click to view)"):
+        st.json(symbolic_state.get_state())
