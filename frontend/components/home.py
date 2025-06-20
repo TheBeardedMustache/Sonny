@@ -8,8 +8,8 @@ def home_page():
     """Render the home page UI."""
     st.title("Sonny - Lunar Venusian Martial Regulus")
     st.subheader("Welcome to Sonny's Mercury Frontend")
-    st.markdown("**Symbolic State:**")
-    st.json(symbolic_state.get_state())
+    with st.expander("Symbolic State (click to view)"):
+        st.json(symbolic_state.get_state())
     st.markdown(
         """
 Use the sidebar to select an automation path:
