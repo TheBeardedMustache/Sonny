@@ -5,6 +5,7 @@ Sonny is a cutting-edge integrated agent platform leveraging multiple orchestrat
 ## Mercury Path: Streamlit Frontend
 - Interactive, streamlined UI for selecting and configuring agents, now optimized for clarity and performance.
 - Real-time display of operations and logs.
+- Purified Silver Interfaces: Frontend code has been streamlined to remove redundancies, simplify components, and optimize responsiveness, providing a stable, intuitive user experience.
 
 ## Silver Path: Desktop Automation
 - GUI automation via PyAutoGUI (mouse, keyboard, window management).

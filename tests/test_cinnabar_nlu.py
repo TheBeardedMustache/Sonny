@@ -13,7 +13,11 @@ class DummyResp:
 
 def test_interpret_input_success(monkeypatch):
     monkeypatch.setenv("OPENAI_API_KEY", "dummy_key")
-    monkeypatch.setattr(openai.ChatCompletion, 'create', lambda **kwargs: DummyResp("parsed_intent"))
+    # Monkeypatch new SDK OpenAI.chat.completions.create
+    from openai import OpenAI
+    dummy_cmp = type('cmp', (), {'create': staticmethod(lambda **kwargs: DummyResp('parsed_intent'))})
+    dummy_chat = type('Chat', (), {'completions': dummy_cmp})
+    monkeypatch.setattr(OpenAI, 'chat', dummy_chat)
     result = interpret_input("Test input")
     assert result == "parsed_intent"
 

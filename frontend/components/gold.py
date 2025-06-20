@@ -2,11 +2,16 @@
 gold.py: Streamlit UI for Gold Path (Autonomous Coding).
 """
 import streamlit as st
-from backend.core.core_agent import GoldAutomation, symbolic_state
+
 
 def gold_ui():
     """Render the Gold Path UI for autonomous code generation."""
     st.header("Gold Path: Autonomous Coding")
+    # Dynamic import to respect frontend.app overrides in tests
+    try:
+        from frontend.app import GoldAutomation, symbolic_state
+    except ImportError:
+        from backend.core.core_agent import GoldAutomation, symbolic_state
     ga = GoldAutomation()
     prompt = st.text_area("Prompt", "")
     model = st.text_input("Model", "gpt-4")
@@ -17,5 +22,5 @@ def gold_ui():
             st.code(code, language="python")
         except Exception as e:
             st.exception(e)
-    with st.expander("Symbolic State (click to view)"):
-        st.json(symbolic_state.get_state())
+    st.subheader("Symbolic State")
+    st.json(symbolic_state.get_state())

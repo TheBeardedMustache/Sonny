@@ -1,7 +1,7 @@
 # base.py: Common LLM client utilities with symbolic resonance integration
 import os
 import logging
-import openai
+from openai import OpenAI
 from dotenv import load_dotenv
 from pydantic import BaseModel, ValidationError, validator
 
@@ -11,8 +11,9 @@ logger = logging.getLogger(__name__)
 api_key = os.getenv("OPENAI_API_KEY")
 if not api_key:
     logger.warning("OPENAI_API_KEY not set; LLMClient will raise on use")
+    client = None
 else:
-    openai.api_key = api_key
+    client = OpenAI(api_key=api_key)
 
 class LLMRequest(BaseModel):
     text: str
@@ -47,7 +48,7 @@ class LLMClient:
         if self.symbolic_state:
             self.symbolic_state.update(self.__class__.__name__ + ":user_text", req.text)
         try:
-            response = openai.ChatCompletion.create(
+            response = client.chat.completions.create(
                 model=self.model,
                 messages=[
                     {"role": "system", "content": self.system_prompt},

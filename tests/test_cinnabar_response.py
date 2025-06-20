@@ -13,7 +13,11 @@ class DummyResp2:
 
 def test_generate_response_success(monkeypatch):
     monkeypatch.setenv("OPENAI_API_KEY", "dummy_key")
-    monkeypatch.setattr(openai.ChatCompletion, 'create', lambda **kwargs: DummyResp2("reply_text"))
+    # Monkeypatch new SDK OpenAI.chat.completions.create
+    from openai import OpenAI
+    dummy_cmp = type('cmp', (), {'create': staticmethod(lambda **kwargs: DummyResp2('reply_text'))})
+    dummy_chat = type('Chat', (), {'completions': dummy_cmp})
+    monkeypatch.setattr(OpenAI, 'chat', dummy_chat)
     result = generate_response("Hello")
     assert result == "reply_text"
 

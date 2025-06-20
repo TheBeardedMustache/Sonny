@@ -1,7 +1,7 @@
 # nlu.py: Natural language understanding utilities via OpenAI API.
 import logging
 import os
-import openai
+from openai import OpenAI
 from pydantic import BaseModel, validator, ValidationError
 from backend.cinnabar.base import LLMClient
 from backend.core.core_agent import symbolic_state
@@ -45,9 +45,10 @@ def interpret_input(text: str, model: str = "gpt-4", max_tokens: int = 256) -> s
     if not os.getenv("OPENAI_API_KEY"):
         raise RuntimeError("OPENAI_API_KEY not set")
     logger.info(f"interpret_input received: {data.text!r}")
-    # Perform interpretation via OpenAI API (stubbed openai in this module)
+    # Perform interpretation via OpenAI API using new SDK
+    client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
     try:
-        response = openai.ChatCompletion.create(
+        response = client.chat.completions.create(
             model=model,
             messages=[
                 {"role": "system", "content": _nlu_client.system_prompt},
