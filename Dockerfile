@@ -22,3 +22,7 @@ EXPOSE 8501 8000
 CMD ["sh", "-c", \
     "uvicorn backend.api:app --host 0.0.0.0 --port 8000 & \
      streamlit run frontend/app.py --server.port=8501 --server.address=0.0.0.0"]
+
+# Healthcheck to ensure API is responsive
+HEALTHCHECK --interval=30s --timeout=5s \
+  CMD curl -f http://localhost:8000/ || exit 1
