@@ -2,7 +2,7 @@
 import streamlit as st
 import pytest
 
-from frontend.Home_Page import main as home_page
+from frontend.components.home import home_page
 
 def test_home_page_render(monkeypatch):
     # Monkeypatch Streamlit methods to ensure no errors
