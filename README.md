@@ -139,6 +139,15 @@ For local sandbox testing, you can deploy Sonny in a Hyper-V VM:
 
 > _Sonny’s unified automation schema provides a “beautiful violet sheen” of reliable, safe, and scalable agent logic._
 
+## Frontend Modularization
+The Streamlit UI has been modularized into reusable components under `frontend/components/`:
+- **home.py**: Home page UI (`home_page()`)
+- **silver.py**: Silver Path UI (`silver_ui()`)
+- **gold.py**: Gold Path UI (`gold_ui()`)
+- **cinnabar.py**: Cinnabar Path UI (`cinnabar_ui()`)
+- **combined.py**: Combined Path UI (`combined_ui()`)
+Refer to `instructions/Reusable_Frontend_Modules.md` for implementation and usage details.
+
 ## Final Amalgamation Summary
 Sonny has completed 7 integration-distillation cycles, achieving:
 - Fully unified symbolic reasoning and core logic

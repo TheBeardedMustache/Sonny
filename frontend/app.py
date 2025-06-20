@@ -1,11 +1,15 @@
 # app.py: Entry point for the Sonny frontend application using Streamlit.
 
 import streamlit as st
-from frontend.Home_Page import main as home_page
+from frontend.components.home import home_page
+from frontend.components.silver import silver_ui
+from frontend.components.gold import gold_ui
+from frontend.components.cinnabar import cinnabar_ui
+from frontend.components.combined import combined_ui
 from backend.core.core_agent import SilverAutomation, GoldAutomation, process_request, symbolic_state
 from backend.core.core_agent import SilverAutomation, GoldAutomation, process_request
 
-def silver_ui():
+# The UI components are now modularized in frontend/components
     st.header("Silver Path: Desktop Automation")
     sa = SilverAutomation()
     x = st.number_input("X-coordinate", value=0)
@@ -27,7 +31,7 @@ def silver_ui():
     st.markdown("**Symbolic State:**")
     st.json(symbolic_state.get_state())
 
-def gold_ui():
+
     st.header("Gold Path: Autonomous Coding")
     ga = GoldAutomation()
     prompt = st.text_area("Prompt", "")
@@ -43,7 +47,7 @@ def gold_ui():
     st.markdown("**Symbolic State:**")
     st.json(symbolic_state.get_state())
 
-def cinnabar_ui():
+
     st.header("Cinnabar Path: Natural Language Understanding")
     text = st.text_area("Input Text", "")
     if st.button("Interpret Input"):
@@ -56,7 +60,7 @@ def cinnabar_ui():
     st.markdown("**Symbolic State:**")
     st.json(symbolic_state.get_state())
 
-def combined_ui():
+
     st.header("Combined Path: Full Workflow")
     st.write("Generate and execute tasks in a unified workflow.")
     # Display symbolic state for combined insights
