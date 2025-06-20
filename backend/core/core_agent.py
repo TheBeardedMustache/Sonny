@@ -171,3 +171,31 @@ def process_request(text: str) -> str:
     except Exception:
         logger.exception("Error processing request")
         raise
+    
+class AnimatedMercury:
+    """Dynamic autonomous agent with proactive task generation and symbolic integration."""
+
+    def __init__(self, llm_client=None, symbolic_state=None):
+        from backend.cinnabar.base import LLMClient
+        # Use provided LLM client or default for symbolic reasoning
+        self.llm = llm_client or LLMClient(
+            system_prompt="You are an autonomous agent generating proactive tasks.",
+            symbolic_state=symbolic_state or globals().get('symbolic_state')
+        )
+        self.state = symbolic_state or globals().get('symbolic_state')
+
+    def generate_proactive_task(self) -> str:
+        """Generate a proactive task based on current symbolic state."""
+        # Extract current state snapshot
+        current_state = self.state.get_state() if self.state else {}
+        prompt = f"Given the current symbolic state: {current_state}, suggest the next best action as a Python instruction."
+        logger.info(f"AnimatedMercury generating proactive task with prompt: {prompt}")
+        try:
+            task = self.llm.chat(prompt)
+            # Record in symbolic state
+            if self.state:
+                self.state.update("proactive_task", task)
+            return task
+        except Exception:
+            logger.exception("Error generating proactive task")
+            raise
