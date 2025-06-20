@@ -1,7 +1,7 @@
 # response.py: Generates assistant responses via OpenAI API.
 import os
 import logging
-import openai
+from openai import OpenAI
 from dotenv import load_dotenv
 from backend.core.core_agent import symbolic_state
 from pydantic import BaseModel, ValidationError, validator
@@ -31,7 +31,7 @@ def generate_response(text: str, model: str = "gpt-4", max_tokens: int = 512) ->
     api_key = os.getenv("OPENAI_API_KEY")
     if not api_key:
         raise RuntimeError("OPENAI_API_KEY not set")
-    openai.api_key = api_key
+    client = OpenAI(api_key=api_key)
     # Validate input
     try:
         params = ResponseInput(text=text, model=model, max_tokens=max_tokens)
@@ -40,7 +40,7 @@ def generate_response(text: str, model: str = "gpt-4", max_tokens: int = 512) ->
         raise ValueError(str(e))
     logger.info(f"Generating response for input: {params.text}")
     try:
-        response = openai.ChatCompletion.create(
+        response = client.chat.completions.create(
             model=model,
             messages=[
                 {"role": "system", "content": "You are a helpful assistant responding to user queries."},

@@ -4,7 +4,7 @@ import subprocess
 import logging
 
 from dotenv import load_dotenv
-import openai
+from openai import OpenAI
 
 load_dotenv()
 
@@ -15,9 +15,9 @@ def generate_script(prompt: str, model: str = "gpt-4", max_tokens: int = 1024) -
     api_key = os.getenv("OPENAI_API_KEY")
     if not api_key:
         raise RuntimeError("OPENAI_API_KEY not set")
-    openai.api_key = api_key
+    client = OpenAI(api_key=api_key)
     try:
-        response = openai.ChatCompletion.create(
+        response = client.chat.completions.create(
             model=model,
             messages=[
                 {"role": "system", "content": "You are a helpful Python code generator."},
@@ -38,7 +38,7 @@ def modify_script(file_path: str, instructions: str, model: str = "gpt-4", max_t
     api_key = os.getenv("OPENAI_API_KEY")
     if not api_key:
         raise RuntimeError("OPENAI_API_KEY not set")
-    openai.api_key = api_key
+    client = OpenAI(api_key=api_key)
     try:
         with open(file_path, "r", encoding="utf-8") as f:
             original = f.read()
@@ -47,7 +47,7 @@ def modify_script(file_path: str, instructions: str, model: str = "gpt-4", max_t
             f"Instructions: {instructions}\n\n"
             "Provide the modified full script."
         )
-        response = openai.ChatCompletion.create(
+        response = client.chat.completions.create(
             model=model,
             messages=[
                 {"role": "system", "content": "You are a Python code refiner."},

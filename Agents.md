@@ -13,6 +13,7 @@ Sonny provides a refined, responsive UI to:
 - Select and configure automation or coding paths.
 - Enter parameters (coordinates, prompts, file paths) with validation.
 - Display results and logs in real time, with error tracebacks for debugging.
+- Purified Silver Interfaces: Frontend code has been streamlined to remove redundancies, simplify components, and optimize responsiveness for an intuitive user experience.
 
 ## Silver Path: Desktop Automation
 Sonny can automate desktop environments with:
