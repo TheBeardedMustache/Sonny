@@ -104,5 +104,14 @@ Sonny has undergone 7 rigorous integration and purification cycles, resulting in
 - A secure, optimized Docker deployment with healthchecks and resource constraints
 All comprehensive integration tests pass, ensuring peak operational stability and readiness.
 
+## Philosophical Mercury State
+Sonny now operates in **Philosophical Mercury** mode:
+- Proactive autonomy (AnimatedMercury) with live symbolic-state tracking.
+- Seamless, intuitive frontend reflecting dynamic backend decisions.
+- Modular, reusable architecture for future agent innovations.
+
+## Fertile Field Framework
+Explore `instructions/Fertile_Field_Framework.md` for the detailed modular blueprint and extension guidelines.
+
 ## Final Triple-Refinement
 Sonny’s symbolic reasoning and core integrations have undergone three rigorous purification cycles, achieving a pristine state of reliability, agility, and elegance.
