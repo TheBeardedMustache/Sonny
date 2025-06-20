@@ -80,6 +80,8 @@ Sonny’s foundational logic is modularized and available for reuse:
 - See `instructions/Reusable_Modules.md` for a catalog of reusable components.
 - Templates are provided in `reusable_logic_templates/` with usage examples.
 Use these modules and templates to bootstrap new autonomous agents efficiently.
+- **residual_modules/**: Contains distilled modules (symbolic state, LLM client, automation).
+- **fresh_regulus_templates/**: Contains agent wrapper templates for rapid integration.
 ```
 
 ## Controlled Gradual Deployment
