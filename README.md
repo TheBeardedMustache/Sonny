@@ -165,6 +165,11 @@ Sonny now embodies **Philosophical Mercury**:
 ## Fertile Field Framework
 Refer to `instructions/Fertile_Field_Framework.md` for a comprehensive blueprint of Sonny’s modular architecture and best practices for future expansions.
 
+## Red Work: Gold Path
+Advanced backend autonomy and symbolic reasoning are detailed in `instructions/Red_Work_Gold_Path.md`:
+- `AutonomousAgent` class for dynamic code generation and refinement.
+- Proactive self-improvement workflows via symbolic-state–driven prompts.
+
 ## Triple Refinement & Final Purification
 Sonny has successfully completed three cycles of integration refinement, rigorous testing, and symbolic purification.
 All frontend-backend interactions have been validated for maximum clarity, responsiveness, stability, and robustness.
