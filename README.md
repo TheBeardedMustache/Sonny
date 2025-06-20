@@ -101,6 +101,40 @@ Follow these steps for safe, incremental rollout:
 2. **Recovery**: Restart container with `docker start` or re-run `docker run` command.
 ```
 
+## Hyper-V Playground Setup
+For local sandbox testing, you can deploy Sonny in a Hyper-V VM:
+
+1. **Create Hyper-V VM**:
+   - CPU: 4 vCPUs
+   - Memory: 8 GB RAM
+   - Storage: 50 GB virtual disk
+   - Network: NAT or bridged adapter with internet access
+
+2. **Install Docker**:
+   - Use Docker Desktop or Docker Engine for Windows.
+   - Ensure the VM has virtualization enabled.
+
+3. **Deploy Sonny Container**:
+   ```powershell
+   # Pull or build image
+   docker build -t sonny .
+   # Run container with env and ports
+   docker run -d --env-file .env -p 8501:8501 -p 8000:8000 sonny
+   ```
+
+4. **Operational Validation**:
+   - Access UI: http://<VM_IP>:8501/
+   - Access API: http://<VM_IP>:8000/process/
+   - Check logs: `docker logs -f sonny`
+
+5. **Monitoring & Logging**:
+   - Configure log rotation and volume mounts to persist logs.
+   - Use `docker stats` and `docker logs` for performance insights.
+
+6. **Cleanup**:
+   - After testing, stop and remove the container: `docker rm -f sonny`.
+   - Optionally prune unused volumes and images: `docker system prune`.
+
 > _Sonny’s unified automation schema provides a “beautiful violet sheen” of reliable, safe, and scalable agent logic._
 
 ## Triple Refinement & Final Purification
