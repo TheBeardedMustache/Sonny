@@ -87,6 +87,15 @@ Sonny can be containerized for secure deployment:
 
 > _Sonny’s architecture stands as a foundational framework for future autonomous agents, reflecting a “beautiful violet sheen” of cohesive automation logic._
 
+## Frontend Modularization
+The Streamlit UI has been refactored into reusable components under `frontend/components/`:
+- **home.py**: Home page UI (`home_page()`)
+- **silver.py**: Silver Path UI (`silver_ui()`)
+- **gold.py**: Gold Path UI (`gold_ui()`)
+- **cinnabar.py**: Cinnabar Path UI (`cinnabar_ui()`)
+- **combined.py**: Combined Path UI (`combined_ui()`)
+For integration details and templates, see `instructions/Reusable_Frontend_Modules.md`.
+
 ## Final Amalgamation Summary
 Sonny has undergone 7 rigorous integration and purification cycles, resulting in:
 - Seamless fusion of frontend, core automation, and LLM-based symbolic reasoning
