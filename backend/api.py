@@ -1,8 +1,17 @@
 # api.py: FastAPI endpoints for Sonny platform
+import logging
 import os
 from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
 from backend.core.core_agent import process_request
+
+# Explicit logger setup
+logging.basicConfig(
+    level=logging.INFO,
+    format="%(asctime)s [%(levelname)s]: %(message)s",
+    handlers=[logging.StreamHandler()]
+)
+logger = logging.getLogger(__name__)
 
 app = FastAPI(title="Sonny API", version="1.0")
 
