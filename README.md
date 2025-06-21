@@ -7,6 +7,7 @@
 
 - Dockerfile `CMD` now switches into `frontend` before launching Streamlit and disables CORS.
 - No further edits necessary (already implemented).
+- Reordered Dockerfile build steps: copying all source files before running `pip install -e .`, so the package’s `setup.py` is present for the editable installation.
 ### Backend .env and Logging Initialization
 
 - Backend now loads environment variables via `load_dotenv()`.

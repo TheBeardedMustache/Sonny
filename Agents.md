@@ -7,6 +7,7 @@
 
 - Verified Dockerfile `CMD` correctly changes into the `frontend` directory before running Streamlit with `--server.enableCORS=false`.
 - No Dockerfile edits needed.
+- Reordered Dockerfile build steps: moved `COPY . /app` before dependency installation so that `pip install -e .` finds `setup.py` in the project root.
 ## Backend Logging and Environment Initialization
 
 - Ensures `.env` is loaded at startup via `load_dotenv()`.
