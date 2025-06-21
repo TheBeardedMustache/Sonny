@@ -122,6 +122,11 @@ Use these modules and templates to bootstrap new autonomous agents efficiently.
 - **fresh_regulus_templates/**: Contains agent wrapper templates for rapid integration.
 ```
 
+## Modular Refinement
+
+- Removed scaffolding templates in `fresh_regulus_templates/` and `reusable_logic_templates/` after integrating core components.
+- Added production `AgentWrapper` in `backend/core/agent_wrapper.py` for unified automation workflows.
+ 
 ## Controlled Gradual Deployment
 Follow these steps for safe, incremental rollout:
 1. **Local smoke test**: Run with a single container on localhost:
