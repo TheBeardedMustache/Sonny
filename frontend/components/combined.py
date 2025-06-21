@@ -14,12 +14,13 @@ def combined_ui():
         from backend.core.core_agent import AnimatedMercury, symbolic_state
     am = AnimatedMercury(symbolic_state=symbolic_state)
     if st.button("Generate Proactive Task"):
-        try:
-            task = am.generate_proactive_task()
-            symbolic_state.update("proactive_task", task)
-            st.success("Proactive Task Generated:")
-            st.code(task, language="python")
-        except Exception as e:
-            st.exception(e)
+        with st.spinner("Generating proactive task..."):
+            try:
+                task = am.generate_proactive_task()
+                symbolic_state.update("proactive_task", task)
+                st.success("Proactive Task Generated:")
+                st.code(task, language="python")
+            except Exception as e:
+                st.exception(e)
     st.subheader("Symbolic State")
     st.json(symbolic_state.get_state())

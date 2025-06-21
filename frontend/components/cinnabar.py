@@ -8,16 +8,17 @@ def cinnabar_ui():
     st.header("Cinnabar Path: Natural Language Understanding")
     text = st.text_area("Input Text", "")
     if st.button("Interpret Input"):
-        try:
-            # Dynamic import to allow test overrides
+        with st.spinner("Interpreting input..."):
             try:
-                from frontend.app import process_request
-            except ImportError:
-                from backend.core.core_agent import process_request
-            response = process_request(text)
-            st.write(response)
-        except Exception as e:
-            st.exception(e)
+                # Dynamic import to allow test overrides
+                try:
+                    from frontend.app import process_request
+                except ImportError:
+                    from backend.core.core_agent import process_request
+                response = process_request(text)
+                st.write(response)
+            except Exception as e:
+                st.exception(e)
     # Dynamic import for symbolic_state
     try:
         from frontend.app import symbolic_state

@@ -36,6 +36,12 @@ def patch_streamlit(monkeypatch):
     monkeypatch.setattr(st, 'text_input', lambda *args, **kwargs: "gpt-4")
     monkeypatch.setattr(st, 'radio', lambda *args, **kwargs: "Combined")
     monkeypatch.setattr(st, 'button', lambda *args, **kwargs: False)
+    # Stub out spinner context manager to avoid Streamlit runtime requirements
+    _DummySpinner = type("DummySpinner", (), {
+        "__enter__": lambda self: None,
+        "__exit__": lambda self, exc_type, exc_val, exc_tb: False,
+    })
+    monkeypatch.setattr(st, 'spinner', lambda *args, **kwargs: _DummySpinner())
     yield
 
 def test_silver_ui_no_buttons(monkeypatch):

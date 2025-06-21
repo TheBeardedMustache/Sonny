@@ -30,11 +30,19 @@
 - Existing tests utilize the new `OpenAI` client pattern (or monkeypatch the client) and do not require changes.
 - Verified that the test suite passes successfully under the updated SDK v1.0+ syntax.
 
-# Test Suite Verification
+# Frontend-Backend Integration and UX Enhancements
 
-- Scanned all `tests/` modules for deprecated `openai.ChatCompletion.create`; none were found.
-- Existing tests utilize the new `OpenAI` client pattern (or monkeypatch the client) and do not require changes.
-- Verified that the test suite passes successfully under the updated SDK v1.0+ syntax.
+- Wrapped all backend calls in `with st.spinner(...)` to provide dynamic feedback during operations.
+- Silver Path: spinners for Move Mouse and Click actions.
+- Gold Path: spinner during script generation.
+- Cinnabar Path: spinner when interpreting input.
+- Combined Path: spinner for proactive task generation.
+- Symbolic State display remains updated after operations for transparency.
+
+## API Interaction Optimization
+
+- Direct in-process function calls to the backend eliminate HTTP overhead and reduce latency.
+- JSON payloads to the UI are limited to the current symbolic state context for efficient rendering.
 
 # Agents
 Comprehensive overview of Sonny’s agent pathways and capabilities.
