@@ -15,18 +15,15 @@ logging.basicConfig(
 )
 logger = logging.getLogger(__name__)
 
-# Verify required OPENAI_API_KEY is present
-api_key = os.getenv("OPENAI_API_KEY")
-if not api_key:
-    logger.error("OPENAI_API_KEY not found in environment. Please set it in .env file.")
-    raise RuntimeError("Missing OPENAI_API_KEY environment variable")
-    raise ValueError("OPENAI_API_KEY not set")
-  logger.info("Backend started successfully.")
 app = FastAPI(title="Sonny API", version="1.0")
 
 @app.on_event("startup")
-def on_startup():
-    logger.info("Sonny API Service starting up...")
+async def startup_event():
+    api_key = os.getenv("OPENAI_API_KEY")
+    if not api_key:
+        logger.error("OPENAI_API_KEY missing")
+        raise ValueError("OPENAI_API_KEY not set")
+    logger.info("Backend service initialized successfully.")
 
 @app.on_event("shutdown")
 def on_shutdown():
