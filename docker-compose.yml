@@ -27,7 +27,7 @@ services:
       context: services/symbolic_ai_service
     image: sonny-symbolic-ai
     ports:
-      - "9000:9000"
+      - "8001:8001"
     environment:
       - OPENAI_API_KEY
     networks:
