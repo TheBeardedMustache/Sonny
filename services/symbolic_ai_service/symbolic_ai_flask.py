@@ -65,8 +65,13 @@ def proxy(path):
         allow_redirects=False
     )
     excluded = ['content-encoding', 'content-length', 'transfer-encoding', 'connection']
-    headers = [(n, v) for n, v in resp.raw.headers.items() if n.lower() not in excluded]
+    headers = [(n, v) for n, v in resp.headers.items() if n.lower() not in excluded]
     return Response(resp.content, resp.status_code, headers)
+
+@app.route('/healthz', methods=['GET'])
+def healthz():
+    """Health check endpoint."""
+    return {'status': 'ok'}
 
 if __name__ == "__main__":
     # Launch the internal Symbolic AI FastAPI server in background, then start Flask proxy

@@ -10,8 +10,11 @@ All FastAPI core endpoints are exposed via the same paths through this proxy:
 |------------|------------------------|-----------------------------------|
 | /          | GET                    | Healthcheck and root endpoints.   |
 | /process/  | POST                   | Process text via symbolic logic.  |
+| /healthz   | GET                    | Health check endpoint (status ok). |
 
 The proxy supports GET, POST, PUT, PATCH, and DELETE for all routes.
+
+| /healthz   | GET                    | Health check endpoint (status ok). |
 
 ## Environment Variables
 
