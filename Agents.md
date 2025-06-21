@@ -57,7 +57,16 @@
 - Uses OpenAI SDK v1.0+ client with proper `.env` loading, startup validation, and INFO-level logging.
 - Dependencies limited to essential libraries; Docker build and CMD optimized for stability and CORS handling.
 - Comprehensive pytest suite (unit, integration, UI) passes with zero failures.
-- Sonny is now in **Silver Calx** state: production-ready, maintainable, and performant.
+ - Sonny is now in **Silver Calx** state: production-ready, maintainable, and performant.
+
+## Red Work (Gold Path) Planning
+
+- **Objective**: Evolve Sonny to the Golden Calx stage with proactive, multi-step reasoning, advanced symbolic AI, and deep autonomous integration.
+- **Highlights**:
+  - Proactive task decomposition and execution planning
+  - Streaming LLM integrations and function-calling workflows
+  - Enhanced `SymbolicState` for complex event tracking
+- **Next Steps**: See `Red_Work_Gold_Path_Planning.md` for full objectives, technical requirements, and roadmap.
 
 # Agents
 Comprehensive overview of Sonny’s agent pathways and capabilities.
