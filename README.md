@@ -44,6 +44,11 @@
 - Dependencies minimized to essential libraries; Docker build and CMD steps finalized for reliability.
 - Full pytest suite (unit, integration, UI) passes without failures.
 
+## Red Work (Gold Path) Planning
+
+- **Objective**: Transition Sonny to Golden Calx with advanced symbolic AI, proactive reasoning, and end-to-end autonomy.
+- **Next Steps**: Consult `Red_Work_Gold_Path_Planning.md` for detailed objectives, requirements, and roadmap.
+
 # Sonny
 
 Sonny is a cutting-edge integrated agent platform leveraging multiple orchestration layers:
