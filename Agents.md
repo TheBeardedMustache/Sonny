@@ -49,6 +49,16 @@
 - Integrated `AgentWrapper` into `backend/core/agent_wrapper.py` for end-to-end task workflows.
 - Removed redundant template modules now replaced by production implementations.
 
+# Silver Calx Production-Ready State
+
+- Sonny has been distilled into a lean, modular codebase with no scaffolding templates remaining.
+- Real-time symbolic state displayed in the Streamlit UI with dynamic spinners for all operations.
+- Backend orchestration via `core_agent.py`, `agent_wrapper.py`, `codex_auto.py`, and `cinnabar` modules.
+- Uses OpenAI SDK v1.0+ client with proper `.env` loading, startup validation, and INFO-level logging.
+- Dependencies limited to essential libraries; Docker build and CMD optimized for stability and CORS handling.
+- Comprehensive pytest suite (unit, integration, UI) passes with zero failures.
+- Sonny is now in **Silver Calx** state: production-ready, maintainable, and performant.
+
 # Agents
 Comprehensive overview of Sonny’s agent pathways and capabilities.
 
