@@ -21,10 +21,12 @@ import threading
 import subprocess
 import os
 import logging
-from flask import Flask, request, Response
+import time
+from flask import Flask, request, Response, g
 import requests
 from flask_talisman import Talisman
 from pythonjsonlogger import jsonlogger
+from prometheus_client import Counter, Histogram, generate_latest, CONTENT_TYPE_LATEST
 
 # Structured JSON logging
 handler = logging.StreamHandler()
@@ -41,11 +43,20 @@ FASTAPI_HOST = "127.0.0.1"
 SYMBOLIC_URL = f"http://{FASTAPI_HOST}:{SYMBOLIC_INTERNAL_PORT}"
 
 
+# Application setup
 app = Flask(__name__)
 # Security: enforce HTTPS & default security headers
 env = os.getenv("FLASK_ENV", "development")
 force_https = env.lower() == "production"
 Talisman(app, force_https=force_https, strict_transport_security=force_https)
+
+# Prometheus metrics
+REQUEST_COUNT = Counter(
+    'symbolic_ai_request_count', 'Total HTTP requests processed', ['method', 'endpoint', 'http_status']
+)
+REQUEST_LATENCY = Histogram(
+    'symbolic_ai_request_latency_seconds', 'Latency of HTTP requests', ['endpoint']
+)
 
 def run_symbolic_service():
     """Start the Symbolic AI FastAPI service with Uvicorn."""
@@ -61,6 +72,10 @@ def run_symbolic_service():
 @app.before_request
 def log_request():
     logger.info(f"Received {request.method} request on {request.path}")
+
+@app.before_request
+def start_timer():
+    g.start_time = time.time()
 
 @app.route('/', defaults={'path': ''}, methods=['GET','POST','PUT','PATCH','DELETE'])
 @app.route('/<path:path>', methods=['GET','POST','PUT','PATCH','DELETE'])
@@ -79,6 +94,17 @@ def proxy(path):
     excluded = ['content-encoding', 'content-length', 'transfer-encoding', 'connection']
     headers = [(n, v) for n, v in resp.headers.items() if n.lower() not in excluded]
     return Response(resp.content, resp.status_code, headers)
+
+@app.after_request
+def record_metrics(response):
+    latency = time.time() - g.start_time
+    REQUEST_LATENCY.labels(request.path).observe(latency)
+    REQUEST_COUNT.labels(request.method, request.path, response.status_code).inc()
+    return response
+
+@app.route('/metrics')
+def metrics():
+    return Response(generate_latest(), mimetype=CONTENT_TYPE_LATEST)
 
 @app.route('/healthz', methods=['GET'])
 def healthz():

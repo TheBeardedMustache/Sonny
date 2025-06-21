@@ -4,7 +4,8 @@ services:
       context: services/frontend_service
     image: sonny-frontend
     ports:
-      - "8501:8501"
+      # Override external port via FRONTEND_PORT env var; defaults to 8501
+      - "${FRONTEND_PORT:-8501}:8501"
     logging:
       driver: "json-file"
       options:
@@ -12,6 +13,14 @@ services:
         max-file: "3"
     environment:
       - OPENAI_API_KEY
+      - BACKEND_CORE_URL=http://backend_core_service:8000
+    deploy:
+      replicas: 3
+      restart_policy:
+        condition: on-failure
+      update_config:
+        parallelism: 2
+        delay: 10s
     networks:
       - sonny_net
 
@@ -20,7 +29,8 @@ services:
       context: services/backend_core_service
     image: sonny-backend-core
     ports:
-      - "8000:8000"
+      # Override external port via BACKEND_PORT env var; defaults to 8000
+      - "${BACKEND_PORT:-8000}:8000"
     logging:
       driver: "json-file"
       options:
@@ -28,6 +38,14 @@ services:
         max-file: "3"
     environment:
       - OPENAI_API_KEY
+      - SYMBOLIC_AI_URL=http://symbolic_ai_service:8001
+    deploy:
+      replicas: 3
+      restart_policy:
+        condition: on-failure
+      update_config:
+        parallelism: 2
+        delay: 10s
     networks:
       - sonny_net
 
@@ -36,7 +54,8 @@ services:
       context: services/symbolic_ai_service
     image: sonny-symbolic-ai
     ports:
-      - "8001:8001"
+      # Override external port via SYMBOLIC_PORT env var; defaults to 8001
+      - "${SYMBOLIC_PORT:-8001}:8001"
     logging:
       driver: "json-file"
       options:
@@ -44,6 +63,31 @@ services:
         max-file: "3"
     environment:
       - OPENAI_API_KEY
+    deploy:
+      replicas: 3
+      restart_policy:
+        condition: on-failure
+      update_config:
+        parallelism: 2
+        delay: 10s
+    networks:
+      - sonny_net
+
+  prometheus:
+    image: prom/prometheus:latest
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml:ro
+    ports:
+      - "9090:9090"
+    networks:
+      - sonny_net
+
+  grafana:
+    image: grafana/grafana:latest
+    depends_on:
+      - prometheus
+    ports:
+      - "3000:3000"
     networks:
       - sonny_net
 

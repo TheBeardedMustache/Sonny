@@ -18,10 +18,12 @@ import threading
 import logging
 import subprocess
 import os
-from flask import Flask, request, Response
+import time
+from flask import Flask, request, Response, g
 from flask_talisman import Talisman
 import requests
 from pythonjsonlogger import jsonlogger
+from prometheus_client import Counter, Histogram, generate_latest, CONTENT_TYPE_LATEST
 
 # Configuration
 FLASK_PORT = int(os.getenv("FLASK_PORT", 8501))
@@ -29,11 +31,20 @@ STREAMLIT_PORT = int(os.getenv("STREAMLIT_PORT", 8502))
 STREAMLIT_HOST = "127.0.0.1"
 STREAMLIT_URL = f"http://{STREAMLIT_HOST}:{STREAMLIT_PORT}"
 
+# Application setup
 app = Flask(__name__)
 # Security: enforce HTTPS & default security headers
 env = os.getenv("FLASK_ENV", "development")
 force_https = env.lower() == "production"
 Talisman(app, force_https=force_https, strict_transport_security=force_https)
+
+# Prometheus metrics
+REQUEST_COUNT = Counter(
+    'frontend_request_count', 'Total HTTP requests processed', ['method', 'endpoint', 'http_status']
+)
+REQUEST_LATENCY = Histogram(
+    'frontend_request_latency_seconds', 'Latency of HTTP requests', ['endpoint']
+)
 
 # Structured JSON logging
 handler = logging.StreamHandler()
@@ -72,6 +83,21 @@ def proxy(path):
     excluded = ['content-encoding', 'content-length', 'transfer-encoding', 'connection']
     headers = [(name, value) for name, value in resp.headers.items() if name.lower() not in excluded]
     return Response(resp.content, resp.status_code, headers)
+
+@app.before_request
+def start_timer():
+    g.start_time = time.time()
+
+@app.after_request
+def record_metrics(response):
+    latency = time.time() - g.start_time
+    REQUEST_LATENCY.labels(request.path).observe(latency)
+    REQUEST_COUNT.labels(request.method, request.path, response.status_code).inc()
+    return response
+
+@app.route('/metrics')
+def metrics():
+    return Response(generate_latest(), mimetype=CONTENT_TYPE_LATEST)
 
 @app.route('/healthz', methods=['GET'])
 def healthz():
