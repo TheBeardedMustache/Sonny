@@ -1,16 +1,38 @@
 version: '3.8'
 services:
-  sonny:
-    build: .
-    image: sonny
+  frontend_service:
+    build:
+      context: services/frontend_service
+    image: sonny-frontend
     ports:
-      - "8501:8501"  # Streamlit UI port
-      - "8000:8000"  # API port
+      - "8501:8501"
     environment:
       - OPENAI_API_KEY
-      - OTHER_SETTING
-    deploy:
-      resources:
-        limits:
-          cpus: '1.00'
-          memory: 1024M
+    networks:
+      - sonny_net
+
+  backend_core_service:
+    build:
+      context: services/backend_core_service
+    image: sonny-backend-core
+    ports:
+      - "8000:8000"
+    environment:
+      - OPENAI_API_KEY
+    networks:
+      - sonny_net
+
+  symbolic_ai_service:
+    build:
+      context: services/symbolic_ai_service
+    image: sonny-symbolic-ai
+    ports:
+      - "9000:9000"
+    environment:
+      - OPENAI_API_KEY
+    networks:
+      - sonny_net
+
+networks:
+  sonny_net:
+    driver: bridge
