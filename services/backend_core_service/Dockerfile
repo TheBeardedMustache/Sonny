@@ -7,13 +7,13 @@ WORKDIR /app
 COPY requirements.txt /app/
 RUN pip install --upgrade pip && \
     pip install --no-cache-dir -r requirements.txt && \
-    pip install --no-cache-dir -e .
+    pip install --no-cache-dir flask requests
 
 # Copy application code
 COPY . /app
 
-# Expose FastAPI port
+# Expose Flask proxy port
 EXPOSE 8000
 
-# Launch backend API service
-CMD ["uvicorn", "backend.api:app", "--host", "0.0.0.0", "--port", "8000"]
+# Launch Flask proxy for FastAPI core
+CMD ["python", "backend_core_flask.py"]

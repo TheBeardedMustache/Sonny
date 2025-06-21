@@ -7,13 +7,13 @@ WORKDIR /app
 COPY requirements.txt /app/
 RUN pip install --upgrade pip && \
     pip install --no-cache-dir -r requirements.txt && \
-    pip install --no-cache-dir -e .
+    pip install --no-cache-dir flask requests
 
 # Copy application code
 COPY . /app
 
-# Expose Symbolic AI service port
-EXPOSE 9000
+# Expose Flask proxy port
+EXPOSE 8001
 
-# Launch symbolic AI microservice
-CMD ["uvicorn", "backend.symbolic_service:app", "--host", "0.0.0.0", "--port", "9000"]
+# Launch Flask proxy for Symbolic AI service
+CMD ["python", "symbolic_ai_flask.py"]
