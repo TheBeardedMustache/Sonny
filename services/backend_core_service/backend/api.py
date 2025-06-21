@@ -5,7 +5,11 @@ from dotenv import load_dotenv
 load_dotenv()
 from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
-from backend.core.core_agent import process_request
+from backend.core.core_agent import process_request, symbolic_state
+import httpx
+
+# URL for Symbolic AI microservice
+SYMBOLIC_AI_URL = os.getenv("SYMBOLIC_AI_URL", "http://127.0.0.1:8001")
 
 # Explicit logger setup
 logging.basicConfig(
@@ -16,6 +20,10 @@ logging.basicConfig(
 logger = logging.getLogger(__name__)
 
 app = FastAPI(title="Sonny API", version="1.0")
+from fastapi.middleware.gzip import GZipMiddleware
+
+# Compress large responses
+app.add_middleware(GZipMiddleware, minimum_size=500)
 
 @app.on_event("startup")
 async def startup_event():
@@ -39,10 +47,46 @@ def process_endpoint(req: ProcessRequest):
     if result is None:
         raise HTTPException(status_code=400, detail="Invalid or empty input")
     return {"response": result}
+
+class TextRequest(BaseModel):
+    text: str
+
+class ScriptRequest(BaseModel):
+    prompt: str
+
 @app.get("/")
 def read_root():
     """Healthcheck and root endpoint."""
     return {"status": "Sonny API is running"}
+
+@app.get("/state/")
+def get_state():
+    """Retrieve the current symbolic state."""
+    return symbolic_state.get_state()
+
+@app.post("/interpret/")
+async def interpret_proxy(req: TextRequest):
+    """Proxy to the Symbolic AI service interpret endpoint."""
+    async with httpx.AsyncClient() as client:
+        resp = await client.post(f"{SYMBOLIC_AI_URL}/interpret/", json=req.dict())
+    resp.raise_for_status()
+    return resp.json()
+
+@app.post("/respond/")
+async def respond_proxy(req: TextRequest):
+    """Proxy to the Symbolic AI service respond endpoint."""
+    async with httpx.AsyncClient() as client:
+        resp = await client.post(f"{SYMBOLIC_AI_URL}/respond/", json=req.dict())
+    resp.raise_for_status()
+    return resp.json()
+
+@app.post("/script/")
+async def script_proxy(req: ScriptRequest):
+    """Proxy to the Symbolic AI service script endpoint."""
+    async with httpx.AsyncClient() as client:
+        resp = await client.post(f"{SYMBOLIC_AI_URL}/script/", json=req.dict())
+    resp.raise_for_status()
+    return resp.json()
 
 if __name__ == "__main__":
     import uvicorn

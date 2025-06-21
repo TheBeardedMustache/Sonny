@@ -8,7 +8,7 @@ WORKDIR /app
 COPY requirements.txt /app/
 RUN pip install --upgrade pip && \
     pip install --no-cache-dir -r requirements.txt && \
-    pip install --no-cache-dir flask requests flask-talisman python-json-logger
+    pip install --no-cache-dir flask requests flask-talisman python-json-logger prometheus_client
 
 # Copy application code
 COPY . /app

@@ -1,0 +1,19 @@
+global:
+  scrape_interval: 15s
+  evaluation_interval: 15s
+
+scrape_configs:
+  - job_name: 'frontend_service'
+    metrics_path: '/metrics'
+    static_configs:
+      - targets: ['frontend_service:8501']
+
+  - job_name: 'backend_core_service'
+    metrics_path: '/metrics'
+    static_configs:
+      - targets: ['backend_core_service:8000']
+
+  - job_name: 'symbolic_ai_service'
+    metrics_path: '/metrics'
+    static_configs:
+      - targets: ['symbolic_ai_service:8001']

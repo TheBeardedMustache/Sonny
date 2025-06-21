@@ -21,6 +21,7 @@ The proxy supports GET, POST, PUT, PATCH, and DELETE for all routes.
 - `FLASK_PORT` (default: 8000): Port on which Flask listens.
 - `API_INTERNAL_PORT` (default: 8001): Port for the internal FastAPI server.
 - `OPENAI_API_KEY`: Required for backend initialization.
+- `SYMBOLIC_AI_URL` (default: http://symbolic_ai_service:8001): Location of the Symbolic AI service for API proxying.
 
 ## Logging
 

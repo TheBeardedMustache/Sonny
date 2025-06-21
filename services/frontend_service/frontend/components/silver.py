@@ -29,5 +29,9 @@ def silver_ui():
                 st.success(f"Clicked at ({x}, {y})")
             except Exception as e:
                 st.exception(e)
+    @st.cache_data(ttl=10)
+    def get_state_cached():
+        return symbolic_state.get_state()
+
     st.subheader("Symbolic State")
-    st.json(symbolic_state.get_state())
+    st.json(get_state_cached())

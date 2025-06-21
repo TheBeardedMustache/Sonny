@@ -13,14 +13,22 @@ def combined_ui():
     except ImportError:
         from backend.core.core_agent import AnimatedMercury, symbolic_state
     am = AnimatedMercury(symbolic_state=symbolic_state)
+    @st.cache_data(ttl=300)
+    def proactive_cached():
+        return am.generate_proactive_task()
+
     if st.button("Generate Proactive Task"):
         with st.spinner("Generating proactive task..."):
             try:
-                task = am.generate_proactive_task()
+                task = proactive_cached()
                 symbolic_state.update("proactive_task", task)
                 st.success("Proactive Task Generated:")
                 st.code(task, language="python")
             except Exception as e:
                 st.exception(e)
+    @st.cache_data(ttl=10)
+    def get_state_cached():
+        return symbolic_state.get_state()
+
     st.subheader("Symbolic State")
-    st.json(symbolic_state.get_state())
+    st.json(get_state_cached())
