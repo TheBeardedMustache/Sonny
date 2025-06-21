@@ -1,3 +1,40 @@
+### Frontend Import Updates
+
+- Streamlit frontend imports now use direct paths (without `frontend.` prefix).
+- No code changes necessary (already implemented).
+
+### Dockerfile CMD Update
+
+- Dockerfile `CMD` now switches into `frontend` before launching Streamlit and disables CORS.
+- No further edits necessary (already implemented).
+- Reordered Dockerfile build steps: copying all source files before running `pip install -e .`, so the package’s `setup.py` is present for the editable installation.
+### Backend .env and Logging Initialization
+
+- Backend now loads environment variables via `load_dotenv()`.
+- Logging is configured at INFO level.
+- On startup, an async event checks for `OPENAI_API_KEY`:
+  - Logs an error and raises `ValueError` if missing.
+  - Otherwise logs successful initialization.
+
+### OpenAI SDK v1.0+ Migration
+
+- Sonny now uses the OpenAI Python SDK v1.0+ with the `OpenAI` client class.
+- Chat-based completions use `client.chat.completions.create(...)` instead of the deprecated `openai.ChatCompletion.create`.
+- Verified zero occurrences of `ChatCompletion.create` across the codebase.
+- Migration applied in: `backend/cinnabar/base.py`, `backend/cinnabar/nlu.py`, `backend/cinnabar/response.py`, `backend/core/codex_auto.py`.
+
+### OpenAI SDK v1.0+ Migration
+
+- Sonny now uses the OpenAI Python SDK v1.0+ with the `OpenAI` client class.
+- Chat-based completions use `client.chat.completions.create(...)` instead of the deprecated `openai.ChatCompletion.create`.
+- Verified zero occurrences of `ChatCompletion.create` across the codebase.
+- Migration applied in: `backend/cinnabar/base.py`, `backend/cinnabar/nlu.py`, `backend/cinnabar/response.py`, `backend/core/codex_auto.py`.
+
+### Test Suite Verification
+
+- No test files reference `openai.ChatCompletion.create`; all tests already rely on the new `OpenAI` client API or monkeypatch at the client level.
+- Confirmed that the full pytest suite passes successfully under the SDK v1.0+ migration.
+
 # Sonny
 
 Sonny is a cutting-edge integrated agent platform leveraging multiple orchestration layers:

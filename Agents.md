@@ -1,3 +1,41 @@
+## Frontend Import Updates
+
+- Verified that import statements in the `frontend` directory already reference modules directly (e.g., `from components.home import home_page`).
+- No code changes were required.
+
+## Docker CMD Correction
+
+- Verified Dockerfile `CMD` correctly changes into the `frontend` directory before running Streamlit with `--server.enableCORS=false`.
+- No Dockerfile edits needed.
+- Reordered Dockerfile build steps: moved `COPY . /app` before dependency installation so that `pip install -e .` finds `setup.py` in the project root.
+## Backend Logging and Environment Initialization
+
+- Ensures `.env` is loaded at startup via `load_dotenv()`.
+- Configures `logging.basicConfig(level=logging.INFO)` and a `logger`.
+- Moves `OPENAI_API_KEY` validation into an async `startup_event`:
+  - Logs an error and raises `ValueError` if the key is missing.
+  - Logs an info message when initialized successfully.
+
+## OpenAI SDK v1.0+ Migration
+
+- Migrated from deprecated `openai.ChatCompletion.create` to the new OpenAI Python SDK v1.0+ client API:
+  - Uses `from openai import OpenAI` and instantiates `client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))`.
+  - Calls `client.chat.completions.create(...)` instead of the deprecated method.
+- Confirmed no occurrences of `ChatCompletion.create` remain in the codebase.
+  Affected modules: `backend/cinnabar/base.py`, `backend/cinnabar/nlu.py`, `backend/cinnabar/response.py`, `backend/core/codex_auto.py`.
+  
+## Test Suite Verification
+
+- Scanned all `tests/` modules for deprecated `openai.ChatCompletion.create`; none were found.
+- Existing tests utilize the new `OpenAI` client pattern (or monkeypatch the client) and do not require changes.
+- Verified that the test suite passes successfully under the updated SDK v1.0+ syntax.
+
+# Test Suite Verification
+
+- Scanned all `tests/` modules for deprecated `openai.ChatCompletion.create`; none were found.
+- Existing tests utilize the new `OpenAI` client pattern (or monkeypatch the client) and do not require changes.
+- Verified that the test suite passes successfully under the updated SDK v1.0+ syntax.
+
 # Agents
 Comprehensive overview of Sonny’s agent pathways and capabilities.
 
