@@ -40,7 +40,9 @@ FASTAPI_URL = f"http://{FASTAPI_HOST}:{API_INTERNAL_PORT}"
 
 app = Flask(__name__)
 # Security: enforce HTTPS & default security headers
-Talisman(app, force_https=True)
+env = os.getenv("FLASK_ENV", "development")
+force_https = env.lower() == "production"
+Talisman(app, force_https=force_https, strict_transport_security=force_https)
 
 def run_fastapi():
     """Start the FastAPI app with Uvicorn."""

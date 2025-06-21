@@ -31,7 +31,9 @@ STREAMLIT_URL = f"http://{STREAMLIT_HOST}:{STREAMLIT_PORT}"
 
 app = Flask(__name__)
 # Security: enforce HTTPS & default security headers
-Talisman(app, force_https=True)
+env = os.getenv("FLASK_ENV", "development")
+force_https = env.lower() == "production"
+Talisman(app, force_https=force_https, strict_transport_security=force_https)
 
 # Structured JSON logging
 handler = logging.StreamHandler()

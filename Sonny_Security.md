@@ -7,9 +7,16 @@ Each Flask application (`frontend_flask.py`, `backend_core_flask.py`, `symbolic_
 
 ```python
 from flask_talisman import Talisman
+import os
+
 app = Flask(__name__)
-Talisman(app, force_https=True)
+# Only enforce HTTPS and HSTS in production
+env = os.getenv("FLASK_ENV", "development")
+force_https = env.lower() == "production"
+Talisman(app, force_https=force_https, strict_transport_security=force_https)
 ```
+
+> *Note:* By default, the code runs in development mode (no HTTPS redirection or HSTS). For production deployments behind TLS termination, set `FLASK_ENV=production` to enable HTTPS enforcement and HSTS.
 
 This automatically configures headers including:
 - `Strict-Transport-Security`
