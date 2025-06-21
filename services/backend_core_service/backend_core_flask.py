@@ -21,10 +21,16 @@ import os
 import logging
 from flask import Flask, request, Response
 import requests
+from flask_talisman import Talisman
+from pythonjsonlogger import jsonlogger
 
-# Logger setup
-logging.basicConfig(level=logging.INFO, format="%(asctime)s [%(levelname)s]: %(message)s")
-logger = logging.getLogger("backend_core_flask")
+# Structured JSON logging
+handler = logging.StreamHandler()
+formatter = jsonlogger.JsonFormatter('%(asctime)s %(levelname)s %(name)s %(message)s')
+handler.setFormatter(formatter)
+logger = logging.getLogger()
+logger.setLevel(logging.INFO)
+logger.handlers = [handler]
 
 # Configuration
 FLASK_PORT = int(os.getenv("FLASK_PORT", 8000))
@@ -33,6 +39,8 @@ FASTAPI_HOST = "127.0.0.1"
 FASTAPI_URL = f"http://{FASTAPI_HOST}:{API_INTERNAL_PORT}"
 
 app = Flask(__name__)
+# Security: enforce HTTPS & default security headers
+Talisman(app, force_https=True)
 
 def run_fastapi():
     """Start the FastAPI app with Uvicorn."""

@@ -5,6 +5,11 @@ services:
     image: sonny-frontend
     ports:
       - "8501:8501"
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
     environment:
       - OPENAI_API_KEY
     networks:
@@ -16,6 +21,11 @@ services:
     image: sonny-backend-core
     ports:
       - "8000:8000"
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
     environment:
       - OPENAI_API_KEY
     networks:
@@ -27,6 +37,11 @@ services:
     image: sonny-symbolic-ai
     ports:
       - "8001:8001"
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
     environment:
       - OPENAI_API_KEY
     networks:
