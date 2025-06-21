@@ -6,8 +6,9 @@ This service wraps the Streamlit UI in a minimal Flask application. It provides 
 
 | Path       | Method | Description                                         |
 |------------|--------|-----------------------------------------------------|
-| /<path>    | GET    | Redirects to the Streamlit UI at the same path.     |
-| /          | GET    | Redirects to the home page of the Streamlit app.    |
+| /<path>    | GET, POST, PUT, PATCH, DELETE | Proxies requests to the internal Streamlit server. |
+| /          | GET, POST, PUT, PATCH, DELETE | Proxies requests to the root of the Streamlit app. |
+| /healthz   | GET    | Health check endpoint, returns `{ 'status': 'ok' }`.     |
 
 ## Environment Variables
 
@@ -17,7 +18,9 @@ This service wraps the Streamlit UI in a minimal Flask application. It provides 
 ## Security
 
 - All traffic is proxied via the Flask server.
-- Consider adding authentication, HTTPS termination, and CORS policies for production.
+- Streamlit is launched with CORS disabled (`--server.enableCORS=false`) and XSRF protection disabled
+  (`--server.enableXsrfProtection=false`) to avoid CORS/XSRF conflicts behind the proxy.
+- Consider adding authentication, HTTPS termination, and stricter CORS policies for production.
 
 ## Usage
 

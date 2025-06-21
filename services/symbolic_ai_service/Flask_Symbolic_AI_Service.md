@@ -10,6 +10,7 @@ This Flask wrapper proxies requests to the FastAPI-based Symbolic AI microservic
 | /respond/      | POST   | Generate assistant responses.                    |
 | /script/       | POST   | Generate Python scripts from prompts.            |
 | /              | Any    | Proxy route for health checks and root endpoints.|
+| /healthz       | GET    | Health check endpoint (status ok).              |
 
 The proxy supports GET, POST, PUT, PATCH, and DELETE for all routes.
 

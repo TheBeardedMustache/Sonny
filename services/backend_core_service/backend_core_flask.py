@@ -61,12 +61,16 @@ def proxy(path):
         params=request.args,
         data=request.get_data(),
         cookies=request.cookies,
-        allow_redirects=False
+        allow_redirects=False,
     )
     excluded = ['content-encoding', 'content-length', 'transfer-encoding', 'connection']
-    headers = [(name, value) for name, value in resp.raw.headers.items() if name.lower() not in excluded]
-    response = Response(resp.content, resp.status_code, headers)
-    return response
+    headers = [(n, v) for n, v in resp.headers.items() if n.lower() not in excluded]
+    return Response(resp.content, resp.status_code, headers)
+
+@app.route('/healthz', methods=['GET'])
+def healthz():
+    """Health check endpoint."""
+    return {'status': 'ok'}
 
 if __name__ == "__main__":
     # Launch the FastAPI core service in background, then start Flask proxy
