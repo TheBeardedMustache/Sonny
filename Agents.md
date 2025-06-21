@@ -43,6 +43,12 @@
 
 - Direct in-process function calls to the backend eliminate HTTP overhead and reduce latency.
 - JSON payloads to the UI are limited to the current symbolic state context for efficient rendering.
+## Cleanup and Optimization
+
+- Removed unused imports and redundant code in `frontend/app.py`.
+- Cleaned up commented-out code and eliminated duplicate logic across modules.
+- Updated `requirements.txt` to remove unused dependencies (`requests`, `pytest`).
+- Streamlined code paths for clarity and maintainability.
 
 # Agents
 Comprehensive overview of Sonny’s agent pathways and capabilities.
