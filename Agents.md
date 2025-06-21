@@ -45,10 +45,9 @@
 - JSON payloads to the UI are limited to the current symbolic state context for efficient rendering.
 ## Cleanup and Optimization
 
-- Removed unused imports and redundant code in `frontend/app.py`.
-- Cleaned up commented-out code and eliminated duplicate logic across modules.
-- Updated `requirements.txt` to remove unused dependencies (`requests`, `pytest`).
-- Streamlined code paths for clarity and maintainability.
+- Removed template scaffolding directories (`fresh_regulus_templates/`, `reusable_logic_templates/`).
+- Integrated `AgentWrapper` into `backend/core/agent_wrapper.py` for end-to-end task workflows.
+- Removed redundant template modules now replaced by production implementations.
 
 # Agents
 Comprehensive overview of Sonny’s agent pathways and capabilities.
