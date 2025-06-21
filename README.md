@@ -35,6 +35,15 @@
 - No test files reference `openai.ChatCompletion.create`; all tests already rely on the new `OpenAI` client API or monkeypatch at the client level.
 - Confirmed that the full pytest suite passes successfully under the SDK v1.0+ migration.
 
+# Silver Calx Production-Ready State
+
+- Lean, modular architecture with all scaffolding removed.
+- Streamlit UI with dynamic spinners and live `symbolic_state` display.
+- Backend modules (`core_agent`, `agent_wrapper`, `codex_auto`, `cinnabar`) fully integrated.
+- OpenAI SDK v1.0+ client usage with `.env` support and startup validation.
+- Dependencies minimized to essential libraries; Docker build and CMD steps finalized for reliability.
+- Full pytest suite (unit, integration, UI) passes without failures.
+
 # Sonny
 
 Sonny is a cutting-edge integrated agent platform leveraging multiple orchestration layers:
