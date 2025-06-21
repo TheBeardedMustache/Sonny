@@ -1,9 +1,9 @@
 streamlit
 pyautogui
 openai
-requests
+# Removed unused dependency: requests
 pydantic
 fastapi
 uvicorn[standard]
 python-dotenv
-pytest
+# Removed dev/test requirement from production manifest: pytest

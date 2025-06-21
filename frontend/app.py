@@ -20,7 +20,6 @@ except ModuleNotFoundError:
     from components.cinnabar import cinnabar_ui
     from components.combined import combined_ui
 # Expose core classes/functions for UI components and test overrides
-from backend.core.core_agent import SilverAutomation, GoldAutomation, process_request, symbolic_state, AnimatedMercury
 
 
 def main():
