@@ -19,7 +19,9 @@ import logging
 import subprocess
 import os
 from flask import Flask, request, Response
+from flask_talisman import Talisman
 import requests
+from pythonjsonlogger import jsonlogger
 
 # Configuration
 FLASK_PORT = int(os.getenv("FLASK_PORT", 8501))
@@ -28,10 +30,18 @@ STREAMLIT_HOST = "127.0.0.1"
 STREAMLIT_URL = f"http://{STREAMLIT_HOST}:{STREAMLIT_PORT}"
 
 app = Flask(__name__)
+# Security: enforce HTTPS & default security headers
+env = os.getenv("FLASK_ENV", "development")
+force_https = env.lower() == "production"
+Talisman(app, force_https=force_https, strict_transport_security=force_https)
 
-# Logger setup
-logging.basicConfig(level=logging.INFO, format="%(asctime)s [%(levelname)s] %(message)s")
-logger = logging.getLogger(__name__)
+# Structured JSON logging
+handler = logging.StreamHandler()
+formatter = jsonlogger.JsonFormatter('%(asctime)s %(levelname)s %(name)s %(message)s')
+handler.setFormatter(formatter)
+logger = logging.getLogger()
+logger.setLevel(logging.INFO)
+logger.handlers = [handler]
 
 def run_streamlit():
     """Start the Streamlit app in a separate process."""

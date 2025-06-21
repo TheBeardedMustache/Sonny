@@ -16,16 +16,23 @@ Security and Logging:
     - Ensure OPENAI_API_KEY is secured.
 """
 
+
 import threading
 import subprocess
 import os
 import logging
 from flask import Flask, request, Response
 import requests
+from flask_talisman import Talisman
+from pythonjsonlogger import jsonlogger
 
-# Logger setup
-logging.basicConfig(level=logging.INFO, format="%(asctime)s [%(levelname)s]: %(message)s")
-logger = logging.getLogger("symbolic_ai_flask")
+# Structured JSON logging
+handler = logging.StreamHandler()
+formatter = jsonlogger.JsonFormatter('%(asctime)s %(levelname)s %(name)s %(message)s')
+handler.setFormatter(formatter)
+logger = logging.getLogger()
+logger.setLevel(logging.INFO)
+logger.handlers = [handler]
 
 # Configuration
 FLASK_PORT = int(os.getenv("FLASK_PORT", 8001))
@@ -33,7 +40,12 @@ SYMBOLIC_INTERNAL_PORT = int(os.getenv("SYMBOLIC_INTERNAL_PORT", 9000))
 FASTAPI_HOST = "127.0.0.1"
 SYMBOLIC_URL = f"http://{FASTAPI_HOST}:{SYMBOLIC_INTERNAL_PORT}"
 
+
 app = Flask(__name__)
+# Security: enforce HTTPS & default security headers
+env = os.getenv("FLASK_ENV", "development")
+force_https = env.lower() == "production"
+Talisman(app, force_https=force_https, strict_transport_security=force_https)
 
 def run_symbolic_service():
     """Start the Symbolic AI FastAPI service with Uvicorn."""
