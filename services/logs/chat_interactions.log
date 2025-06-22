@@ -1,0 +1,10 @@
+[2025-06-22 17:05:19] USER: Hello Sonny
+[2025-06-22 17:05:19] SONNY: [Sonny backend unavailable in dev mode - echoing] Hello Sonny
+[2025-06-22 17:10:44] USER: Hello
+[2025-06-22 17:10:44] SONNY: [Sonny backend unavailable in dev mode - echoing] Hello
+[2025-06-22 17:11:45] USER: hello
+[2025-06-22 17:11:45] SONNY: [Sonny backend unavailable in dev mode - echoing] hello
+[2025-06-22 17:31:16] USER: hello
+[2025-06-22 17:31:16] SONNY: [Sonny backend unavailable in dev mode - echoing] hello
+[2025-06-22 17:31:24] USER: how are you?
+[2025-06-22 17:31:24] SONNY: [Sonny backend unavailable in dev mode - echoing] how are you?
