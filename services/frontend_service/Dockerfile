@@ -1,3 +1,4 @@
+# syntax=docker/dockerfile:1.4
 FROM python:3.11-slim
 
 ENV PYTHONUNBUFFERED=1
@@ -6,8 +7,18 @@ ENV PYTHONUNBUFFERED=1
 # Install dependencies
 WORKDIR /app
 COPY services/frontend_service/requirements.txt /app/requirements.txt
-RUN apt-get update && apt-get install -y curl && rm -rf /var/lib/apt/lists/* \
- && pip install --upgrade pip && \
+# Cache apt packages across builds
+RUN --mount=type=cache,target=/var/cache/apt \
+    apt-get update && apt-get install -y \
+        curl \
+        xvfb \
+        x11-utils \
+        x11-xserver-utils \
+    && rm -rf /var/lib/apt/lists/*
+
+# Cache pip downloads across builds
+RUN --mount=type=cache,target=/root/.cache/pip \
+    pip install --upgrade pip && \
     pip install --no-cache-dir -r /app/requirements.txt
 
 # Copy application code
@@ -23,8 +34,9 @@ EXPOSE 8501
 HEALTHCHECK --interval=30s --timeout=5s --start-period=15s --retries=3 \
   CMD curl -f http://localhost:8501/ || exit 1
 
-# Launch Streamlit UI directly on 0.0.0.0:8501 (WebSocket support)
-CMD ["streamlit", "run", "/app/frontend/app.py", \
+# Launch Streamlit UI under a virtual X server so desktop automation works
+CMD ["xvfb-run", "-s", "-screen 0 1024x768x24", \
+     "streamlit", "run", "/app/frontend/app.py", \
      "--server.port", "8501", \
      "--server.address", "0.0.0.0", \
      "--server.enableCORS", "false", \

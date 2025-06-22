@@ -4,7 +4,10 @@
 import logging
 import os
 import subprocess
-import pyautogui
+try:
+    import pyautogui
+except (KeyError, ImportError):
+    pyautogui = None
 from pydantic import BaseModel, ValidationError, validator
 from backend.core.core_agent import symbolic_state
 
@@ -45,6 +48,8 @@ def move_mouse(x, y, duration=0):
     except ValidationError as e:
         logger.error(f"Validation error in move_mouse: {e}")
         return None
+    if pyautogui is None:
+        raise RuntimeError("Desktop automation unavailable: missing DISPLAY or pyautogui installation.")
     logger.info(f"move_mouse: moving to ({x}, {y}) over {duration}s")
     try:
         symbolic_state.update("move_mouse", {"x": x, "y": y, "duration": duration})
@@ -75,6 +80,8 @@ def click(x=None, y=None, button='left'):
     except ValidationError as e:
         logger.error(f"Validation error in click: {e}")
         return None
+    if pyautogui is None:
+        raise RuntimeError("Desktop automation unavailable: missing DISPLAY or pyautogui installation.")
     logger.info(f"click: button={button} at ({x}, {y})")
     try:
         symbolic_state.update("click", {"x": x, "y": y, "button": button})
@@ -85,6 +92,8 @@ def click(x=None, y=None, button='left'):
 
 def drag_mouse(x, y, duration=0):
     """Drag mouse to (x, y) over optional duration."""
+    if pyautogui is None:
+        raise RuntimeError("Desktop automation unavailable: missing DISPLAY or pyautogui installation.")
     logger.info(f"drag_mouse: dragging to ({x}, {y}) over {duration}s")
     try:
         symbolic_state.update("drag_mouse", {"x": x, "y": y, "duration": duration})
@@ -114,6 +123,8 @@ def type_text(text, interval=0):
     except ValidationError as e:
         logger.error(f"Validation error in type_text: {e}")
         return None
+    if pyautogui is None:
+        raise RuntimeError("Desktop automation unavailable: missing DISPLAY or pyautogui installation.")
     logger.info(f"type_text: typing '{text}'")
     try:
         symbolic_state.update("type_text", {"text": text, "interval": interval})
@@ -125,6 +136,8 @@ def type_text(text, interval=0):
 def press_keys(*keys):
     """Press key combination."""
     logger.info(f"press_keys: {keys}")
+    if pyautogui is None:
+        raise RuntimeError("Desktop automation unavailable: missing DISPLAY or pyautogui installation.")
     try:
         symbolic_state.update("press_keys", {"keys": keys})
         pyautogui.hotkey(*keys)
