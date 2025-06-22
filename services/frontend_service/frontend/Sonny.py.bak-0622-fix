@@ -58,10 +58,12 @@ with tabs[0]:
         with st.chat_message("assistant"):
             with st.spinner("Sonny is thinking..."):
                 try:
-                    # Unified backend workflow: use the explicit autonomous_agent (not fallback echo)
-                    from backend.core.autonomous_agent import AutonomousAgent
-                    agent = AutonomousAgent(system_prompt="You are Sonny, backend autonomy agent for unified chat. Log and explain each step.")
-                    sonny_text = agent.process_chat(user_text)
+                    from backend.core.core_agent import process_chat
+                except ImportError:
+                    def process_chat(prompt):
+                        return "[Sonny backend unavailable in dev mode - echoing] " + prompt
+                try:
+                    sonny_text = process_chat(user_text)
                 except Exception as ex:
                     sonny_text = f"[Error from Sonny backend: {ex}]"
                 st.markdown(sonny_text)
