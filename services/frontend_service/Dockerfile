@@ -6,10 +6,14 @@ ENV PYTHONUNBUFFERED=1
 # Install dependencies
 WORKDIR /app
 COPY services/frontend_service/requirements.txt /app/requirements.txt
-RUN apt-get update && apt-get install -y curl && rm -rf /var/lib/apt/lists/* \
- && apt-get update && apt-get install -y curl xvfb x11-utils && rm -rf /var/lib/apt/lists/* \
- && pip install --upgrade pip && \
-    pip install --no-cache-dir -r /app/requirements.txt
+RUN apt-get update && apt-get install -y \
+        curl \
+        xvfb \
+        x11-utils \
+        x11-xserver-utils \
+    && rm -rf /var/lib/apt/lists/* \
+    && pip install --upgrade pip \
+    && pip install --no-cache-dir -r /app/requirements.txt
 
 # Copy application code
 # Copy frontend application
