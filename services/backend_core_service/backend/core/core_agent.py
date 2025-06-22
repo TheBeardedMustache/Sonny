@@ -149,9 +149,9 @@ import backend.cinnabar.nlu as nlu
 import backend.cinnabar.response as response
 
 def process_request(text: str) -> str:
-    """Process a user request: interpret and respond via Cinnabar."""
+    """Unified reasoning for process_request: interpret, reason, and respond with explicit logging."""
+    from backend.core.autonomous_agent import AutonomousAgent
     logger.info(f"process_request received: {text}")
-    # Validate input
     try:
         data = RequestInput(text=text)
         symbolic_state.update("process_request_input", data.text)
@@ -159,25 +159,15 @@ def process_request(text: str) -> str:
         logger.error(f"Validation error in process_request: {e}")
         return None
     try:
-        # Update symbolic resonance before processing
-        # Interpret input to extract intent and record it
-        intent = nlu.interpret_input(data.text)
-        symbolic_state.update("process_request_intent", intent)
-        result = response.generate_response(intent)
-        symbolic_state.update("process_request_response", result)
-        # Ensure process_request_intent matches initial interpretation
-        try:
-            init_intent = symbolic_state.get_state().get("interpret_input")
-            if init_intent is not None:
-                symbolic_state.update("process_request_intent", init_intent)
-        except Exception:
-            pass
-        return result
-    except ValidationError as e:
-        logger.error(f"Validation error in process_request intent/response: {e}")
-        return None
-    except Exception:
-        logger.exception("Error processing request")
+        agent = AutonomousAgent(system_prompt="You are Sonny, clearly explain decisions, pick best tool, and log all steps.")
+        output = agent.reason_decide_act(data.text)
+        # Update symbolic resonance, return summary response
+        response_log = "\n".join([f"[log] {step}" for step in output["log"]])
+        response_log += f"\n[Sonny Action: {output['decision']}]\n{output['result']}"
+        symbolic_state.update("process_request_response_log", response_log)
+        return response_log
+    except Exception as e:
+        logger.exception(f"Error processing request autonomously: {e}")
         raise
     
 class AnimatedMercury:
