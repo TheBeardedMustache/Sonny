@@ -15,7 +15,22 @@ BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 AUTONOMY_LOG = os.path.abspath(os.path.join(BASE_DIR, "../../logs/autonomy_log.log"))
 CMD_LOG = os.path.abspath(os.path.join(BASE_DIR, "../../logs/cmd_execution.log"))
 
+
+ERROR_LOG = os.path.abspath(os.path.join(BASE_DIR, "../../logs/error_handling.log"))
 logger = logging.getLogger(__name__)
+
+def log_error(message: str, exc: Exception = None):
+    dt = datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S")
+    err_line = f"[{dt}] [ERROR] {message}"
+    if exc is not None:
+        err_detail = f" Exception: {str(exc)}"
+        err_line += err_detail
+    try:
+        with open(ERROR_LOG, "a", encoding="utf-8") as f:
+            f.write(err_line + "\n")
+    except Exception:
+        logger.error(f"Severe error: Unable to write to error_handling.log")
+    logger.error(err_line)
 
 
 # ---- Explicit Logging Utils ----
@@ -50,7 +65,6 @@ def run_cmd(command_str):
     try:
         # Prefer splits/simple parsing if command_str is str
         if isinstance(cmd, str):
-            # Use shlex.split for real security, but here basic split
             import shlex
             cmd = shlex.split(cmd)
         result = subprocess.run(cmd, capture_output=True, text=True, timeout=30)
@@ -60,8 +74,10 @@ def run_cmd(command_str):
         if result.returncode == 0:
             return output
         else:
+            log_error(f"CMD ERROR\nERROR: {error}\nOUTPUT: {output}\nRC: {result.returncode}")
             return f"[CMD ERROR]\nERROR: {error}\nOUTPUT: {output}\nRC: {result.returncode}"
     except Exception as e:
+        log_error(f"Exception running CMD: {command_str}", e)
         log_cmd(command_str, "", f"Exception: {str(e)}", -999)
         return f"[CMD EXCEPTION] {e}"
 
