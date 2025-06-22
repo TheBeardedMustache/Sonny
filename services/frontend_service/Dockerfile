@@ -7,6 +7,7 @@ ENV PYTHONUNBUFFERED=1
 WORKDIR /app
 COPY services/frontend_service/requirements.txt /app/requirements.txt
 RUN apt-get update && apt-get install -y curl && rm -rf /var/lib/apt/lists/* \
+ && apt-get update && apt-get install -y curl xvfb x11-utils && rm -rf /var/lib/apt/lists/* \
  && pip install --upgrade pip && \
     pip install --no-cache-dir -r /app/requirements.txt
 
@@ -23,9 +24,10 @@ EXPOSE 8501
 HEALTHCHECK --interval=30s --timeout=5s --start-period=15s --retries=3 \
   CMD curl -f http://localhost:8501/ || exit 1
 
-# Launch Streamlit UI directly on 0.0.0.0:8501 (WebSocket support)
-CMD ["streamlit", "run", "/app/frontend/app.py", \
-     "--server.port", "8501", \
-     "--server.address", "0.0.0.0", \
-     "--server.enableCORS", "false", \
+# Launch Streamlit UI under a virtual X server so desktop automation works
+CMD ["xvfb-run", "-s", "-screen 0 1024x768x24",
+     "streamlit", "run", "/app/frontend/app.py",
+     "--server.port", "8501",
+     "--server.address", "0.0.0.0",
+     "--server.enableCORS", "false",
      "--server.enableXsrfProtection", "false"]
