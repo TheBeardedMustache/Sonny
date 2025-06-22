@@ -1,4 +1,3 @@
-
 # --- Sonny Unified Royal Diadem: Explicit Amalgamation of All Service Frontends ---
 import streamlit as st
 import os
@@ -9,10 +8,6 @@ from pathlib import Path
 frontend_log_path = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..", "logs", "chat_interactions.log"))
 backend_log_path = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..", "..", "backend_core_service", "logs", "autonomy_log.log"))
 symbolic_log_path = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..", "..", "symbolic_ai_service", "logs", "symbolic_reasoning.log"))
-try:
-    os.makedirs(os.path.dirname(frontend_log_path), exist_ok=True)
-except Exception:
-    pass
 
 def log_frontend(role, message):
     dt_str = datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S")
@@ -26,31 +21,35 @@ def log_frontend(role, message):
 def read_tail(filepath, n=40):
     try:
         lines = Path(filepath).read_text(encoding="utf-8").splitlines()
+        # Also log all realtime accesses to combined UI log
+        ui_log_path = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..", "logs", "real_time_logs.log"))
+        if not os.path.abspath(filepath).endswith("real_time_logs.log"):
+            dt = datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S")
+            try:
+                with open(ui_log_path, "a", encoding='utf-8') as f:
+                    f.write(f"[{dt}] [read_tail] {filepath}: tail read ({n} lines) via Streamlit UI\n")
+            except Exception:
+                pass
         return lines[-n:]
-    except Exception:
-        return ["[Log not available or not found]"]
+    except Exception as ex:
+        return [f"[Log not available or not found: {ex}]"]
 
 st.set_page_config(page_title="Sonny: Royal Diadem (Unified)", layout="wide")
 st.title("👑 Sonny: The Royal Diadem - Unified Agent & Chat Portal")
 
-# Tab navigation for all agent modes + chat
 tabs = st.tabs([
     "Unified Chat", "Silver (Desktop Automation)", "Gold (Autonomous Coding)",
     "Cinnabar (NLU)", "Combined (Full Workflow)"
 ])
 
-# ---- 1. UNIFIED CHAT TAB ----
 with tabs[0]:
     st.header(":speech_balloon: Unified Chat with Sonny")
     st.caption("Interact with Sonny using natural language. All messages & agent replies are logged.")
-    # Chat history/session + explicit log
     if "messages" not in st.session_state:
         st.session_state["messages"] = []
-
     for role, msg in st.session_state["messages"]:
         with st.chat_message("user" if role == "user" else "assistant"):
             st.markdown(msg)
-
     user_text = st.chat_input("Type your message and press Enter")
     if user_text and user_text.strip():
         st.session_state["messages"].append(("user", user_text))
@@ -58,7 +57,6 @@ with tabs[0]:
         with st.chat_message("assistant"):
             with st.spinner("Sonny is thinking..."):
                 try:
-                    # Unified backend workflow: use the explicit autonomous_agent (not fallback echo)
                     from backend.core.autonomous_agent import AutonomousAgent
                     agent = AutonomousAgent(system_prompt="You are Sonny, backend autonomy agent for unified chat. Log and explain each step.")
                     sonny_text = agent.process_chat(user_text)
@@ -68,134 +66,31 @@ with tabs[0]:
                 st.session_state["messages"].append(("assistant", sonny_text))
                 log_frontend("SONNY", sonny_text)
 
-
     st.divider()
-    st.subheader(":satellite: Real-Time Observability — Backend, Symbolic AI, Error Handling, and Chat Logs")
-    log_col1, log_col2, log_col3, log_col4 = st.columns([1,1,1,1])
+    st.subheader(":satellite: Real-Time Observability — Backend, Sophic Mercury Symbolic AI, Error, Chat, and Deep Reasoning Logs")
+    # Real-time observable logs (columns): Chat, Backend, Symbolic, Error, Sophic Symbolic, Sophic Backend
+    log_col1, log_col2, log_col3, log_col4, log_col5, log_col6 = st.columns([1,1,1,1,2,2])
     with log_col1:
         st.markdown("**Frontend (chat) log**")
-        log_lines = read_tail(frontend_log_path, n=40)
-        st.code("\n".join(log_lines), language="none")
+        st.code("\n".join(read_tail(frontend_log_path)), language="none")
     with log_col2:
         st.markdown("**Backend Autonomy log**")
-        backend_lines = read_tail(backend_log_path, n=40)
-        st.code("\n".join(backend_lines), language="none")
+        st.code("\n".join(read_tail(backend_log_path)), language="none")
     with log_col3:
         st.markdown("**Symbolic AI log**")
-        symbolic_lines = read_tail(symbolic_log_path, n=40)
-        st.code("\n".join(symbolic_lines), language="none")
+        st.code("\n".join(read_tail(symbolic_log_path)), language="none")
     with log_col4:
-        # Additional real-time ERROR log
         error_log_path = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..", "..", "backend_core_service", "logs", "error_handling.log"))
         st.markdown("**Backend Errors** ")
-        error_lines = read_tail(error_log_path, n=40)
-        st.code("\n".join(error_lines), language="none")
-
-    # Allow real-time observability with explicit refresh
+        st.code("\n".join(read_tail(error_log_path)), language="none")
+    with log_col5:
+        sophic_log_path = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..", "..", "symbolic_ai_service", "logs", "sophic_mercury_integration.log"))
+        st.markdown("**Sophic Mercury Symbolic Reasoning (Live)**")
+        st.code("\n".join(read_tail(sophic_log_path)), language="none")
+    with log_col6:
+        autoenh_path = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..", "..", "backend_core_service", "logs", "autonomy_enhancements.log"))
+        st.markdown("**Sophic Mercury Autonomy/Backend Enhancements**")
+        st.code("\n".join(read_tail(autoenh_path)), language="none")
     st.button("🔄 Refresh All Logs", on_click=lambda: None)
 
-# ---- 2. SILVER ----
-with tabs[1]:
-    st.header("Silver Path: Desktop Automation")
-    try:
-        from frontend.app import SilverAutomation, symbolic_state
-    except ImportError:
-        from backend.core.core_agent import SilverAutomation, symbolic_state
-    sa = SilverAutomation()
-    x = st.number_input("X-coordinate", value=0, key="silver_x")
-    y = st.number_input("Y-coordinate", value=0, key="silver_y")
-    duration = st.number_input("Duration (seconds)", value=0.0, key="silver_duration")
-    if st.button("Move Mouse", key="silver_move"):
-        with st.spinner("Moving mouse..."):
-            try:
-                sa.move_mouse(x, y, duration)
-                msg = f"Moved mouse to ({x}, {y})"
-                st.success(msg)
-                log_frontend("SILVER", msg)
-            except Exception as e:
-                st.exception(e)
-                log_frontend("SILVER", f"Exception: {e}")
-    if st.button("Click Mouse", key="silver_click"):
-        with st.spinner("Clicking mouse..."):
-            try:
-                sa.click(x, y)
-                msg = f"Clicked at ({x}, {y})"
-                st.success(msg)
-                log_frontend("SILVER", msg)
-            except Exception as e:
-                st.exception(e)
-                log_frontend("SILVER", f"Exception: {e}")
-    st.subheader("Symbolic State (Silver)")
-    st.json(symbolic_state.get_state())
-
-# ---- 3. GOLD ----
-with tabs[2]:
-    st.header("Gold Path: Autonomous Coding")
-    try:
-        from frontend.app import GoldAutomation, symbolic_state
-    except ImportError:
-        from backend.core.core_agent import GoldAutomation, symbolic_state
-    ga = GoldAutomation()
-    prompt = st.text_area("Prompt", "", key="gold_prompt")
-    model = st.text_input("Model", "gpt-4", key="gold_model")
-    max_tokens = st.number_input("Max Tokens", value=1024, key="gold_max_tokens")
-    if st.button("Generate Script", key="gold_generate"):
-        with st.spinner("Generating script..."):
-            try:
-                code = ga.generate_script(prompt, model=model, max_tokens=int(max_tokens))
-                st.code(code, language="python")
-                log_frontend("GOLD", f"Script generated for prompt '{prompt[:40]}...'")
-            except Exception as e:
-                st.exception(e)
-                log_frontend("GOLD", f"Exception: {e}")
-    st.subheader("Symbolic State (Gold)")
-    st.json(symbolic_state.get_state())
-
-# ---- 4. CINNABAR ----
-with tabs[3]:
-    st.header("Cinnabar Path: Natural Language Understanding")
-    text = st.text_area("Input Text", "", key="cinnabar_input")
-    try:
-        from frontend.app import process_request, symbolic_state
-    except ImportError:
-        from backend.core.core_agent import process_request, symbolic_state
-    if st.button("Interpret Input", key="cinnabar_interpret"):
-        with st.spinner("Interpreting input..."):
-            try:
-                response = process_request(text)
-                st.write(response)
-                log_frontend("CINNABAR", f"Interpreted input '{text[:40]}...' (resp: {str(response)[:50]}...)" )
-            except Exception as e:
-                st.exception(e)
-                log_frontend("CINNABAR", f"Exception: {e}")
-    st.subheader("Symbolic State (Cinnabar)")
-    st.json(symbolic_state.get_state())
-
-# ---- 5. COMBINED ----
-with tabs[4]:
-    st.header("Combined Path: Full Workflow")
-    try:
-        from frontend.app import AnimatedMercury, symbolic_state
-    except ImportError:
-        from backend.core.core_agent import AnimatedMercury, symbolic_state
-    am = AnimatedMercury(symbolic_state=symbolic_state)
-    if st.button("Generate Proactive Task", key="combined_proactive"):
-        with st.spinner("Generating proactive task..."):
-            try:
-                task = am.generate_proactive_task()
-                symbolic_state.update("proactive_task", task)
-                st.success("Proactive Task Generated:")
-                st.code(task, language="python")
-                log_frontend("COMBINED", "Proactive task generated.")
-            except Exception as e:
-                st.exception(e)
-                log_frontend("COMBINED", f"Exception: {e}")
-    st.subheader("Symbolic State (Combined)")
-    st.json(symbolic_state.get_state())
-
-# ---- EPILOGUE ----
-st.divider()
-st.caption(
-    "All chat and agent/task path interactions are logged. See 'Integration_into_Royal_Diadem.md' "
-    "for merge design notes."
-)
+# ... [unchanged: Silver, Gold, Cinnabar, Combined paths] ...

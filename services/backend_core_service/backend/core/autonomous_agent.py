@@ -1,20 +1,28 @@
 """
 autonomous_agent.py: Unified Royal Diadem Backend—explicitly integrates 'silver', 'gold', 'cinnabar', 'combined' (decision/logic and logging)
-Each action is logged to 'backend_core_service/logs/autonomy_log.log' with explicit tags and rationales.
+Each action is logged to 'backend_core_service/logs/autonomy_log.log' with explicit tags and rationales, and to 'backend_core_service/logs/autonomy_enhancements.log' for Sophic Mercury reasoning.
 """
-
 import os
 import logging
 from datetime import datetime
 import subprocess
 from backend.cinnabar.base import LLMClient
 from backend.core.core_agent import symbolic_state
-
+# Sophic Mercury advanced reasoning integration
+from backend.cinnabar.advanced import analyze_text, plan_tasks
+# Log explicit integration steps
+_autonomy_enhancements_log = os.path.abspath(os.path.join(os.path.dirname(__file__), '../../logs/autonomy_enhancements.log'))
+def log_sophic_autonomy(message: str):
+    ts = datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S")
+    try:
+        with open(_autonomy_enhancements_log, 'a', encoding='utf-8') as f:
+            f.write(f"[{ts}] {message}\n")
+    except Exception:
+        pass
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 AUTONOMY_LOG = os.path.abspath(os.path.join(BASE_DIR, "../../logs/autonomy_log.log"))
 CMD_LOG = os.path.abspath(os.path.join(BASE_DIR, "../../logs/cmd_execution.log"))
-
 
 ERROR_LOG = os.path.abspath(os.path.join(BASE_DIR, "../../logs/error_handling.log"))
 logger = logging.getLogger(__name__)
@@ -31,7 +39,6 @@ def log_error(message: str, exc: Exception = None):
     except Exception:
         logger.error(f"Severe error: Unable to write to error_handling.log")
     logger.error(err_line)
-
 
 # ---- Explicit Logging Utils ----
 def log_autonomy(message: str, level: str = "INFO"):
@@ -81,13 +88,12 @@ def run_cmd(command_str):
         log_cmd(command_str, "", f"Exception: {str(e)}", -999)
         return f"[CMD EXCEPTION] {e}"
 
-
 class AutonomousAgent:
     """
     Unified Royal Diadem Autonomous Agent (backend)
     - Explicitly integrates Silver (CMD), Gold (Codex/code-gen), Cinnabar (NLU/Response), Combined (decision logic)
-    - Each step is logged with clear tags: SILVER (CMD), GOLD (CODEX), CINNABAR (NLU/assistant), COMBINED (decision & fallback)
-    - Tool selection and result, as well as all actions, are logged to autonomy_log.log
+    Sophic Mercury: Each step now uses explicit symbolic/log_sophic_autonomy reasoning
+    - Tool selection and result, as well as all actions, are logged to autonomy_log.log and autonomy_enhancements.log
     """
     def __init__(self, system_prompt: str = "You are an explicit autonomous Python agent."):
         self.llm = LLMClient(
@@ -101,63 +107,91 @@ class AutonomousAgent:
 
     def reason_decide_act(self, user_input: str = None, **kwargs):
         """
-        Accept text command, reason explicitly—using unified Gold/Silver/Cinnabar/Combined logic:
-        - If CMD-suitable: run as Silver path (shell command)
-        - If code gen/edit: run as Gold path (Codex/codex_auto)
-        - Otherwise: Cinnabar (LLM-response/assistant)
-        All steps (input, decision, result) are explicitly logged.
+        Sophic Mercury: Accept text command, reason step-by-step with deep symbolic/chain-of-thought context.
+        - Advanced symbolic planning and analysis are included for decision/context.
+        - All reasoning steps, tool decisions, and plans are logged to both autonomy log files.
         """
         log = []
         log.append(f"Received user input: {user_input}")
         log_autonomy(f"[COMBINED] Received input: {user_input}")
 
-        # --- Step 1: Validate input ---
         if not user_input or not user_input.strip():
             log.append("Input empty: rejecting as invalid.")
             log_autonomy("[COMBINED] Rejected as invalid: input empty.", level="WARNING")
+            log_sophic_autonomy("Input empty: rejecting as invalid.")
             self.state.update("autonomous_agent_last_reasoning", log)
             return {"log": log, "decision": "invalid", "result": None, "symbolic_state": self.state.get_state()}
 
-        # --- Step 2: Gold/Silver/Cinnabar/Combined: explicit tool-auto-selection
-        # This classifier prompt can be easily extended
+        # --- Step 2: Sophic Mercury symbolic reasoning pipeline ---
+        analysis = analyze_text(user_input)
+        log_sophic_autonomy(f"Sophic Mercury analysis: {analysis}")
+        log.append(f"[SOPHIC] Deep analysis: {analysis.get('analysis','')}")
+        log_autonomy(f"[SOPHIC] Deep analysis: {analysis.get('analysis','')}")
+
+        context = self.state.get_state()
+        plans = plan_tasks(context)
+        log_sophic_autonomy(f"Sophic Mercury plans: {plans}")
+        log.append(f"[SOPHIC] Proactive plan suggestion(s): {plans}")
+        log_autonomy(f"[SOPHIC] Proactive plan suggestion(s): {plans}")
+
+        # --- Step 3: Enhanced tool decision with Sophic context ---
         decision_prompt = (
-            "Classify this request as one and only one explicit path: \n"
+            "Analyze the following request with symbolic, philosophical, and practical context. \n"
+            "Which path should an autonomous agent select to maximize wisdom, virtue, and efficacy, given this symbolic state?\n"
+            f"Sophic Mercury analysis - chain of thought: {analysis.get('chain_of_thought', [])}\n"
+            f"Sophic Mercury plans: {plans}\n"
             "SILVER: Run a shell/system command to control the OS or files.\n"
             "GOLD: Generate, edit, or refactor code (Codex/codex_auto).\n"
             "CINNABAR: Interpret/respond as pure LLM/assistant.\n"
+            f"Symbolic state summary: {context}\n"
             f"User Request: {user_input}\nType (SILVER/GOLD/CINNABAR):"
         )
         decision_type = self.llm.chat(decision_prompt).strip().upper()
-        log.append(f"[COMBINED] LLM tool decision: {decision_type}")
-        log_autonomy(f"[COMBINED] LLM tool decision for '{user_input}': {decision_type}")
+        log.append(f"[SOPHIC] LLM tool decision: {decision_type}")
+        log_autonomy(f"[SOPHIC] LLM tool decision (Sophic context) for '{user_input}': {decision_type}")
+        log_sophic_autonomy(f"Sophic Mercury tool decision: {decision_type}")
 
-        # --- Step 3: Dispatch to selected tool ---
+        # --- Step 4: Dispatch to tool
         result = None
+        philosophical_explanation = None
         if "SILVER" in decision_type or "CMD" in decision_type:
-            # -- SILVER: OS automation via CMD
-            log.append(f"[SILVER] Tool selected: CMD. Invoking '{user_input}'")
-            log_autonomy(f"[SILVER] CMD execution starting: {user_input}")
+            log.append(f"[SILVER] Tool selected: CMD. Invoking '{user_input}' with context-sensitive rationale.")
+            log_autonomy(f"[SILVER] CMD execution (Virtue) starting: {user_input}")
+            log_sophic_autonomy(f"CMD execution (Sophic): {user_input}")
             result = run_cmd(user_input)
             log_autonomy(f"[SILVER] CMD execution done. Result: {result[:200]}", level="RESULT")
+            log_sophic_autonomy(f"CMD execution result (Sophic): {result[:200]}")
         elif "GOLD" in decision_type or "CODEX" in decision_type:
-            # -- GOLD: code generation/code editing
-            log.append(f"[GOLD] Tool selected: CODEX CLI (code-gen)")
-            log_autonomy("[GOLD] Using Codex/Codex-auto for code generation.")
-            from backend.core import codex_auto
-            code_result = codex_auto.generate_script(user_input)
-            result = f"[GOLD][CODEX OUTPUT]\n{code_result}"
-            log_autonomy(f"[GOLD] CODEX result: {code_result[:200]}", level="RESULT")
+            try:
+                log.append(f"[GOLD] Tool selected: CODEX CLI (Virtue code-gen)")
+                log_autonomy("[GOLD] Using Codex/Codex-auto for code generation (Virtue mode).")
+                log_sophic_autonomy("GOLD (CODEX) tool selected, generating script.")
+                from backend.core import codex_auto
+                code_result = codex_auto.generate_script(user_input)
+                result = f"[GOLD][CODEX OUTPUT]\n{code_result}"
+                log_autonomy(f"[GOLD] CODEX result: {code_result[:200]}", level="RESULT")
+                log_sophic_autonomy(f"CODEX result (Sophic): {code_result[:200]}")
+            except Exception as gold_exc:
+                log_error("Exception in GOLD/Codex tool selection", gold_exc)
+                log_sophic_autonomy(f"Exception in GOLD/Codex: {gold_exc}")
+                result = f"[GOLD][EXCEPTION] {gold_exc}"
         else:
-            # -- CINNABAR: LLM/assistant interpretation
-            log.append(f"[CINNABAR] Tool selected: LLM/Assistant/Response.")
-            log_autonomy("[CINNABAR] LLM fallback (responding as symbolic/assistant)")
-            symbolic_result = self.llm.chat(user_input)
-            result = f"[CINNABAR][LLM RESULT]\n{symbolic_result}"
-            log_autonomy(f"[CINNABAR] LLM result: {symbolic_result[:200]}", level="RESULT")
-
-        # --- Step 4: Final logging, symbolic update ---
+            try:
+                log.append(f"[CINNABAR] Tool selected: LLM/Assistant/Response (Virtue philosophical fallback).")
+                log_autonomy("[CINNABAR] LLM fallback (Virtue philosophical reasoning)")
+                log_sophic_autonomy("LLM fallback, symbolic reasoning/response (Sophic)")
+                symbolic_result = self.llm.chat(user_input)
+                result = f"[CINNABAR][LLM RESULT]\n{symbolic_result}"
+                log_autonomy(f"[CINNABAR] LLM result: {symbolic_result[:200]}", level="RESULT")
+                log_sophic_autonomy(f"LLM result (Sophic): {symbolic_result[:200]}")
+            except Exception as cinnabar_exc:
+                log_error("Exception in CINNABAR/LLM tool selection", cinnabar_exc)
+                log_sophic_autonomy(f"Exception in CINNABAR/LLM: {cinnabar_exc}")
+                result = f"[CINNABAR][EXCEPTION] {cinnabar_exc}"
+        # --- Step 5: Final logging, symbolic update ---
         log.append(f"Outcome: {result}")
         log_autonomy(f"[COMBINED] Outcome: {result[:120]}", level="OUTCOME")
+        log_sophic_autonomy(f"Outcome (Sophic): {result[:120]}")
         self.state.update("autonomous_agent_last_reasoning", log)
         self.state.update("autonomous_agent_last_decision", decision_type)
         self.state.update("autonomous_agent_last_result", result)
