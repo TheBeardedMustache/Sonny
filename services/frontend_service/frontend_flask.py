@@ -31,8 +31,8 @@ STREAMLIT_PORT = int(os.getenv("STREAMLIT_PORT", 8502))
 STREAMLIT_HOST = "127.0.0.1"
 STREAMLIT_URL = f"http://{STREAMLIT_HOST}:{STREAMLIT_PORT}"
 
-# Application setup
-app = Flask(__name__)
+# Application setup: disable Flask's default static route so all /static/* paths proxy to Streamlit
+app = Flask(__name__, static_folder=None)
 # Security: enforce HTTPS & default security headers
 env = os.getenv("FLASK_ENV", "development")
 force_https = env.lower() == "production"
@@ -63,13 +63,21 @@ def run_streamlit():
         "--server.enableCORS", "false",
         "--server.enableXsrfProtection", "false"
     ]
-    subprocess.Popen(cmd, cwd=os.getcwd())
+    logger.info(f"Starting Streamlit subprocess with cmd: {' '.join(cmd)}")
+    try:
+        subprocess.Popen(cmd, cwd=os.getcwd())
+    except Exception:
+        logger.error("Failed to launch Streamlit subprocess", exc_info=True)
 
 
 @app.route('/healthz', methods=['GET'])
 def healthz():
     """Health check endpoint."""
     return {'status': 'ok'}
+
+@app.before_request
+def log_request():
+    logger.info(f"Received {request.method} request on {request.path}")
 
 @app.route('/', defaults={'path': ''}, methods=['GET', 'POST', 'PUT', 'PATCH', 'DELETE'])
 @app.route('/<path:path>', methods=['GET', 'POST', 'PUT', 'PATCH', 'DELETE'])
