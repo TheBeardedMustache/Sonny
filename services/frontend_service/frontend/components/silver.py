@@ -20,6 +20,8 @@ def silver_ui():
             try:
                 sa.move_mouse(x, y, duration)
                 st.success(f"Moved mouse to ({x}, {y})")
+            except RuntimeError as e:
+                st.error(str(e))
             except Exception as e:
                 st.exception(e)
     if st.button("Click Mouse"):
@@ -27,6 +29,8 @@ def silver_ui():
             try:
                 sa.click(x, y)
                 st.success(f"Clicked at ({x}, {y})")
+            except RuntimeError as e:
+                st.error(str(e))
             except Exception as e:
                 st.exception(e)
     @st.cache_data(ttl=10)
