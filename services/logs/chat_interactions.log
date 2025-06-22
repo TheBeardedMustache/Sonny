@@ -8,3 +8,17 @@
 [2025-06-22 17:31:16] SONNY: [Sonny backend unavailable in dev mode - echoing] hello
 [2025-06-22 17:31:24] USER: how are you?
 [2025-06-22 17:31:24] SONNY: [Sonny backend unavailable in dev mode - echoing] how are you?
+[2025-06-22 17:36:05] USER: hello
+[2025-06-22 17:36:05] SONNY: [Sonny backend unavailable in dev mode - echoing] hello
+[2025-06-22 17:58:05] USER: hello
+[2025-06-22 17:58:05] SONNY: [Sonny backend unavailable in dev mode - echoing] hello
+[2025-06-22 17:58:21] USER: hgh
+[2025-06-22 17:58:21] SONNY: [Sonny backend unavailable in dev mode - echoing] hgh
+[2025-06-22 18:44:41] [FRONTEND|USER] Hello Sonny
+[2025-06-22 18:44:41] [FRONTEND|SONNY] [Sonny backend unavailable in dev mode - echoing] Hello Sonny
+[2025-06-22 18:52:34] [FRONTEND|USER] hello
+[2025-06-22 18:52:34] [FRONTEND|SONNY] [Sonny backend unavailable in dev mode - echoing] hello
+[2025-06-22 18:52:49] [FRONTEND|USER] hello
+[2025-06-22 18:52:50] [FRONTEND|SONNY] [Sonny backend unavailable in dev mode - echoing] hello
+[2025-06-22 19:09:12] [FRONTEND|USER] hello
+[2025-06-22 19:09:12] [FRONTEND|SONNY] [Sonny backend unavailable in dev mode - echoing] hello

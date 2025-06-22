@@ -6,25 +6,60 @@ import logging
 from datetime import datetime
 from backend.cinnabar.base import LLMClient
 from backend.core.core_agent import symbolic_state
+import subprocess
 
-# Log file for explicit autonomy decisions and actions
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-GLOBAL_LOG_PATH = os.path.abspath(
-    os.path.join(BASE_DIR, "../../logs/autonomy_log.log")
-)
+AUTONOMY_LOG = os.path.abspath(os.path.join(BASE_DIR, "../../logs/autonomy.log"))
+CMD_LOG = os.path.abspath(os.path.join(BASE_DIR, "../../logs/cmd_execution.log"))
 
 logger = logging.getLogger(__name__)
 
-def log_autonomy(message: str):
-    """Append to the autonomy log file and logger."""
+def log_autonomy(message: str, level: str = "INFO"):
+    """Structured log for all backend autonomy decisions and tool actions."""
     dt = datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S")
-    line = f"[{dt}] {message}\n"
+    line = f"[{dt}] [AUTONOMY|{level}] {message}\n"
     try:
-        with open(GLOBAL_LOG_PATH, "a", encoding="utf-8") as f:
+        with open(AUTONOMY_LOG, "a", encoding="utf-8") as f:
             f.write(line)
     except Exception as exc:
-        logger.warning(f"Could not write to autonomy log: {exc}")
+        logger.warning(f"Could not write to autonomy.log: {exc}")
     logger.info(message)
+
+def log_cmd(command, output, error, returncode):
+    dt = datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S")
+    try:
+        with open(CMD_LOG, "a", encoding="utf-8") as f:
+            f.write(
+                f"[{dt}] [AUTONOMY|CMD] EXECUTE: {command}\n"
+                f"[{dt}] [AUTONOMY|CMD] OUTPUT: {output}\n"
+                f"[{dt}] [AUTONOMY|CMD] ERROR: {error}\n"
+                f"[{dt}] [AUTONOMY|CMD] RETURNCODE: {returncode}\n"
+            )
+    except Exception as exc:
+        logger.warning(f"Could not write to cmd_execution.log: {exc}")
+
+def run_cmd(command_str):
+    """Safely execute shell command and log it. Returns output string or error."""
+    cmd = command_str if isinstance(command_str, list) else command_str.strip()
+    log_autonomy(f"CMD Execution requested: {cmd}")
+    # Recommend shell-interpreter parsing only if genuinely required
+    try:
+        # Prefer splits/simple parsing if command_str is str
+        if isinstance(cmd, str):
+            # Use shlex.split for real security, but here basic split
+            import shlex
+            cmd = shlex.split(cmd)
+        result = subprocess.run(cmd, capture_output=True, text=True, timeout=30)
+        output = (result.stdout or "").strip()
+        error = (result.stderr or "").strip()
+        log_cmd(" ".join(cmd), output, error, result.returncode)
+        if result.returncode == 0:
+            return output
+        else:
+            return f"[CMD ERROR]\nERROR: {error}\nOUTPUT: {output}\nRC: {result.returncode}"
+    except Exception as e:
+        log_cmd(command_str, "", f"Exception: {str(e)}", -999)
+        return f"[CMD EXCEPTION] {e}"
 
 class AutonomousAgent:
     """Simplified explicit, step-by-step autonomous agent (text command only, clear tool-chain)."""
@@ -53,48 +88,43 @@ class AutonomousAgent:
             self.state.update("autonomous_agent_last_reasoning", log)
             return {"log": log, "decision": "invalid", "result": None, "symbolic_state": self.state.get_state()}
 
-        # Step 2: Explicitly classify as CMD or CODEX via LLM
+        # Step 2: Classifier prompt and tool autonomous selection (Gold, Silver, Cinnabar, Combined logic unified)
         decision_prompt = (
-            "Classify the following user request explicitly as one of:\n"
-            "CMD: For direct shell/system command or OS interaction.\n"
-            "CODEX: For any code generation, code editing, or code-related file operations.\n"
-            "SYMBOLIC: For questions, general reasoning, or natural language tasks.\n"
+            "Classify this request explicitly as one and only one tool: \n"
+            "CMD: Run a shell/system command when user intent is to interact with the OS or files directly. \n"
+            "CODEX: For any code generation, editing, refactoring, or code completion.\n"
             f"Request: {user_input}\nType:"
         )
         decision_type = self.llm.chat(decision_prompt).strip().upper()
-        log.append(f"LLM decision: {decision_type}")
-        log_autonomy(f"LLM classified input as: {decision_type}")
+        log.append(f"LLM tool decision: {decision_type}")
+        log_autonomy(f"LLM tool decision for '{user_input}': {decision_type}")
 
-        # Step 3: Act and explicitly document reasoning
+        # Step 3: Unified explicit action and logging
         result = None
         if "CMD" in decision_type:
-            log.append("Tool selected: CMD. Preparing to execute as shell/system command.")
-            log_autonomy(f"Tool selected: CMD (Shell) for '{user_input}'")
-            # Simulate actual CMD; real implementation would run safely via subprocess
-            result = f"[SIMULATED CMD] Would run: {user_input}"
-            log_autonomy(f"Simulated CMD execution: '{user_input}'")
+            log.append("Tool: CMD. Invoking securely.")
+            log_autonomy(f"Tool: CMD. Executing '{user_input}'")
+            result = run_cmd(user_input)
+            log_autonomy(f"CMD execution done. Result: {result[:200]}", level="RESULT")
         elif "CODEX" in decision_type:
-            log.append("Tool selected: CODEX CLI. Generating code with Codex (simulated).")
-            log_autonomy("Tool selected: CODEX CLI")
-            code_task = f"Write or edit code as per: {user_input}"
-            code_result = self.llm.chat(code_task)
-            result = f"[SIMULATED CODEX] Codex output:\n{code_result}"
-            log_autonomy(f"Simulated Codex CLI output: {code_result[:100]}...")
-        elif "SYMBOLIC" in decision_type:
-            log.append("Tool selected: SYMBOLIC (LLM). Performing reasoning/answer.")
-            log_autonomy("Tool selected: SYMBOLIC (LLM)")
-            symbolic_result = self.llm.chat(f"Answer or analyze: {user_input}")
-            result = f"[SYMBOLIC RESULT]\n{symbolic_result}"
-            log_autonomy(f"Symbolic result: {symbolic_result[:100]}...")
+            log.append("Tool: CODEX CLI. Generating code.")
+            log_autonomy("Tool: CODEX CLI. Generating or editing code.")
+            # Use Codex module for generation or modification
+            from backend.core import codex_auto
+            code_result = codex_auto.generate_script(user_input)
+            result = f"[CODEX OUTPUT]\n{code_result}"
+            log_autonomy(f"CODEX result: {code_result[:200]}", level="RESULT")
         else:
-            log.append(f"Unknown tool class '{decision_type}' - fallback to LLM symbolic.")
-            log_autonomy(f"Unknown tool type. Fallback to LLM.")
-            fallback = self.llm.chat(user_input)
-            result = f"[FALLBACK SYMBOLIC]\n{fallback}"
+            # Default to symbolic LLM reasoning path (Cinnabar/Cinnabar Response)
+            log.append("Tool: LLM fallback - responding as symbolic/assistant.")
+            log_autonomy("Tool: SYMBOLIC/LLM fallback (responding as assistant)")
+            symbolic_result = self.llm.chat(user_input)
+            result = f"[SYMBOLIC/LLM RESULT]\n{symbolic_result}"
+            log_autonomy(f"LLM result: {symbolic_result[:200]}", level="RESULT")
 
         # Log outcome and update symbolic state
         log.append(f"Outcome: {result}")
-        log_autonomy(f"Outcome: {result[:120]}")
+        log_autonomy(f"Outcome: {result[:120]}", level="OUTCOME")
         self.state.update("autonomous_agent_last_reasoning", log)
         self.state.update("autonomous_agent_last_decision", decision_type)
         self.state.update("autonomous_agent_last_result", result)
