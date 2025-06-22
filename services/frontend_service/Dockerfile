@@ -1,4 +1,4 @@
-syntax = docker/dockerfile:1.4
+# syntax=docker/dockerfile:1.4
 FROM python:3.11-slim
 
 ENV PYTHONUNBUFFERED=1
