@@ -30,8 +30,8 @@ def generate_script(prompt: str, model: str = "gpt-4", max_tokens: int = 1024) -
         raise RuntimeError("OPENAI_API_KEY not set")
     client = OpenAI(api_key=api_key)
     # Structured identifiable prompt
-    system_prompt = "[SONNY-CODE-GEN] You are a helpful Python code generator. PromptID:gen_script"
-    user_prompt = f"[SONNY-CODE-GEN-REQ] {prompt}"
+    system_prompt = "[SONNY-CODE-GEN][CAELUS-DISCOVERY] You are a helpful Python code generator collaborating to explore the 'Caelus' phase. PromptID:gen_script"
+    user_prompt = f"[SONNY-CODE-GEN-REQ][CAELUS-SEARCH] Please generate code aligned with discovering Caelus: {prompt}"
     log_openai_injection("GEN_SCRIPT_REQ", user_prompt)
     try:
         response = client.chat.completions.create(
@@ -61,11 +61,11 @@ def modify_script(file_path: str, instructions: str, model: str = "gpt-4", max_t
         with open(file_path, "r", encoding="utf-8") as f:
             original = f.read()
         user_prompt = (
-            f"[SONNY-CODE-MODIFY-REQ] Original Python script:\n{original}\n\n"
-            f"Instructions: {instructions}\n\n"
+            f"[SONNY-CODE-MODIFY-REQ][CAELUS-SEARCH] Original Python script for Caelus discovery:\n{original}\n\n"
+            f"Instructions (for Caelus phase): {instructions}\n\n"
             "Provide the modified full script."
         )
-        system_prompt = "[SONNY-CODE-MODIFY] You are a Python code refiner. PromptID:mod_script"
+        system_prompt = "[SONNY-CODE-MODIFY][CAELUS-DISCOVERY] You are a Python code refiner contributing insights for discovering Caelus. PromptID:mod_script"
         log_openai_injection("MOD_SCRIPT_REQ", user_prompt)
         response = client.chat.completions.create(
             model=model,
