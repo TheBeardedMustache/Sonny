@@ -7,6 +7,7 @@ from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
 from backend.core.core_agent import process_request, symbolic_state
 import httpx
+from backend.core.autonomy import generate_proactive_plan, predict_next_actions
 
 # URL for Symbolic AI microservice
 SYMBOLIC_AI_URL = os.getenv("SYMBOLIC_AI_URL", "http://127.0.0.1:8001")
@@ -87,6 +88,20 @@ async def script_proxy(req: ScriptRequest):
         resp = await client.post(f"{SYMBOLIC_AI_URL}/script/", json=req.dict())
     resp.raise_for_status()
     return resp.json()
+
+class StateRequest(BaseModel):
+    state: dict
+
+@app.post("/autonomy/proactive/")
+async def proactive_autonomy(req: StateRequest):
+    """Generate proactive task plans based on current state."""
+    tasks = generate_proactive_plan(req.state)
+    return {"tasks": tasks}
+
+@app.post("/autonomy/predict/")
+async def predictive_autonomy(req: StateRequest):
+    """Predict next actions based on current state patterns."""
+    return predict_next_actions(req.state)
 
 if __name__ == "__main__":
     import uvicorn

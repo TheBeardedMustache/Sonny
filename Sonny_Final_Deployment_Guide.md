@@ -35,10 +35,14 @@ Refer to the API documentation files:
 - `Symbolic_AI_API.md`
 
 ## Monitoring & Logging
-See `Monitoring_and_Logging.md` for:
-- Structured JSON logging configuration.
-- Docker Compose logging settings and rotation.
-- Healthcheck details.
+See `Monitoring_and_Logging.md` for structured logging and healthcheck details.
+
+For final monitoring maturity, deploy Prometheus & Grafana dashboards:
+
+```bash
+docker-compose up -d prometheus grafana
+```
+Access Grafana at http://localhost:3000 (admin/admin) and view the **Sonny** folder with the `sonny_overview` dashboard (request rates & 95th percentile latency).
 
 ## Deployment Steps
 
@@ -62,5 +66,9 @@ See `Monitoring_and_Logging.md` for:
 - Terminate TLS at an edge reverse proxy (NGINX, Traefik).
 - Manage secrets via a secure vault (not environment files in production).
 - Enforce rate limiting and authentication on production endpoints.
-- Integrate with metrics (Prometheus) and dashboards (Grafana).
+-- Integrate with metrics (Prometheus) and dashboards (Grafana).
+
+## Philosopher’s Stone (Rubedo) Summary
+
+For a complete narrative of Sonny’s final maturation—covering deep optimization, advanced symbolic AI, proactive autonomy, unified monitoring, and long‑term stability—see `Sonny_Rubedo_Philosophers_Stone.md`.
 - Automate tests and deployments via CI/CD pipelines.

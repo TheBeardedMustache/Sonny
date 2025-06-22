@@ -1,0 +1,49 @@
+{
+  "dashboard": {
+    "uid": "sonny-overview",
+    "title": "Sonny Service Overview",
+    "timezone": "browser",
+    "schemaVersion": 16,
+    "version": 0,
+    "panels": [
+      {
+        "type": "graph",
+        "title": "Request Rate by Endpoint",
+        "targets": [
+          {
+            "expr": "sum by (endpoint) (frontend_request_count_total)",
+            "legendFormat": "Frontend: {{endpoint}}"
+          },
+          {
+            "expr": "sum by (endpoint) (backend_core_request_count_total)",
+            "legendFormat": "Backend: {{endpoint}}"
+          },
+          {
+            "expr": "sum by (endpoint) (symbolic_ai_request_count_total)",
+            "legendFormat": "Symbolic AI: {{endpoint}}"
+          }
+        ],
+        "gridPos": {"x": 0, "y": 0, "w": 24, "h": 8}
+      },
+      {
+        "type": "graph",
+        "title": "95th Percentile Latency",
+        "targets": [
+          {
+            "expr": "histogram_quantile(0.95, sum by (le,endpoint) (frontend_request_latency_seconds_bucket))",
+            "legendFormat": "Frontend {{endpoint}}"
+          },
+          {
+            "expr": "histogram_quantile(0.95, sum by (le,endpoint) (backend_core_request_latency_seconds_bucket))",
+            "legendFormat": "Backend {{endpoint}}"
+          },
+          {
+            "expr": "histogram_quantile(0.95, sum by (le,endpoint) (symbolic_ai_request_latency_seconds_bucket))",
+            "legendFormat": "Symbolic AI {{endpoint}}"
+          }
+        ],
+        "gridPos": {"x": 0, "y": 8, "w": 24, "h": 8}
+      }
+    ]
+  }
+}

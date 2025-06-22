@@ -74,6 +74,11 @@ def log_request():
 def start_timer():
     g.start_time = time.time()
 
+@app.route('/healthz', methods=['GET'])
+def healthz():
+    """Health check endpoint."""
+    return {'status': 'ok'}
+
 @app.route('/', defaults={'path': ''}, methods=['GET','POST','PUT','PATCH','DELETE'])
 @app.route('/<path:path>', methods=['GET','POST','PUT','PATCH','DELETE'])
 def proxy(path):
@@ -92,6 +97,9 @@ def proxy(path):
     headers = [(n, v) for n, v in resp.headers.items() if n.lower() not in excluded]
     return Response(resp.content, resp.status_code, headers)
 
+
+
+
 @app.after_request
 def record_metrics(response):
     latency = time.time() - g.start_time
@@ -103,10 +111,6 @@ def record_metrics(response):
 def metrics():
     return Response(generate_latest(), mimetype=CONTENT_TYPE_LATEST)
 
-@app.route('/healthz', methods=['GET'])
-def healthz():
-    """Health check endpoint."""
-    return {'status': 'ok'}
 
 if __name__ == "__main__":
     # Launch the FastAPI core service in background, then start Flask proxy

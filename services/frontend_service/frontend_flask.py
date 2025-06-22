@@ -66,6 +66,11 @@ def run_streamlit():
     subprocess.Popen(cmd, cwd=os.getcwd())
 
 
+@app.route('/healthz', methods=['GET'])
+def healthz():
+    """Health check endpoint."""
+    return {'status': 'ok'}
+
 @app.route('/', defaults={'path': ''}, methods=['GET', 'POST', 'PUT', 'PATCH', 'DELETE'])
 @app.route('/<path:path>', methods=['GET', 'POST', 'PUT', 'PATCH', 'DELETE'])
 def proxy(path):
@@ -81,7 +86,7 @@ def proxy(path):
         allow_redirects=False,
     )
     excluded = ['content-encoding', 'content-length', 'transfer-encoding', 'connection']
-    headers = [(name, value) for name, value in resp.headers.items() if name.lower() not in excluded]
+    headers = [(n, v) for n, v in resp.headers.items() if n.lower() not in excluded]
     return Response(resp.content, resp.status_code, headers)
 
 @app.before_request
@@ -99,10 +104,7 @@ def record_metrics(response):
 def metrics():
     return Response(generate_latest(), mimetype=CONTENT_TYPE_LATEST)
 
-@app.route('/healthz', methods=['GET'])
-def healthz():
-    """Health check endpoint."""
-    return {'status': 'ok'}
+
 
 if __name__ == "__main__":
     # Launch the Streamlit server in background, then start Flask proxy

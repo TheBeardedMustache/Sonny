@@ -73,6 +73,11 @@ def run_symbolic_service():
 def log_request():
     logger.info(f"Received {request.method} request on {request.path}")
 
+@app.route('/healthz', methods=['GET'])
+def healthz():
+    """Health check endpoint."""
+    return {'status': 'ok'}
+
 @app.before_request
 def start_timer():
     g.start_time = time.time()
@@ -106,10 +111,6 @@ def record_metrics(response):
 def metrics():
     return Response(generate_latest(), mimetype=CONTENT_TYPE_LATEST)
 
-@app.route('/healthz', methods=['GET'])
-def healthz():
-    """Health check endpoint."""
-    return {'status': 'ok'}
 
 if __name__ == "__main__":
     # Launch the internal Symbolic AI FastAPI server in background, then start Flask proxy
