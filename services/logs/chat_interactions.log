@@ -22,3 +22,23 @@
 [2025-06-22 18:52:50] [FRONTEND|SONNY] [Sonny backend unavailable in dev mode - echoing] hello
 [2025-06-22 19:09:12] [FRONTEND|USER] hello
 [2025-06-22 19:09:12] [FRONTEND|SONNY] [Sonny backend unavailable in dev mode - echoing] hello
+[2025-06-22 19:38:55] [FRONTEND|USER] Hello!
+[2025-06-22 19:38:55] [FRONTEND|SONNY] [Sonny backend unavailable in dev mode - echoing] Hello!
+[2025-06-22 19:46:23] [FRONTEND|USER] Hello
+[2025-06-22 19:46:23] [FRONTEND|SONNY] [Sonny backend unavailable in dev mode - echoing] Hello
+[2025-06-22 19:46:40] [FRONTEND|CINNABAR] Interpreted input 'Hello! How are you?...' (resp: [log] Received user input: Hello! How are you?
+[lo...)
+[2025-06-22 19:49:59] [FRONTEND|CINNABAR] Interpreted input 'Please create a text file called "Hello_...' (resp: [log] Received user input: Please create a text fi...)
+[2025-06-22 19:51:46] [FRONTEND|COMBINED] Proactive task generated.
+[2025-06-22 19:52:16] [FRONTEND|GOLD] Script generated for prompt '...'
+[2025-06-22 19:53:05] [FRONTEND|GOLD] Script generated for prompt '...'
+[2025-06-22 20:24:29] [FRONTEND|USER] Hello
+[2025-06-22 20:24:33] [FRONTEND|SONNY] [log] Received user input: Hello
+[log] [COMBINED] LLM tool decision: CINNABAR
+[log] [CINNABAR] Tool selected: LLM/Assistant/Response.
+[log] Outcome: [CINNABAR][LLM RESULT]
+As an AI, I don't have the ability to pick tools or colors like SILVER, GOLD, or CINNABAR. I'm here to assist you with any information or help you need. How can I assist you today?
+
+[Sonny Action: CINNABAR]
+[CINNABAR][LLM RESULT]
+As an AI, I don't have the ability to pick tools or colors like SILVER, GOLD, or CINNABAR. I'm here to assist you with any information or help you need. How can I assist you today?
