@@ -3,10 +3,7 @@ global:
   evaluation_interval: 15s
 
 scrape_configs:
-  - job_name: 'frontend_service'
-    metrics_path: '/metrics'
-    static_configs:
-      - targets: ['frontend_service:8501']
+  # frontend_service is served directly via Streamlit and does not expose a Prometheus metrics endpoint
 
   - job_name: 'backend_core_service'
     metrics_path: '/metrics'

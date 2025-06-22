@@ -1,7 +1,8 @@
 services:
   frontend_service:
     build:
-      context: services/frontend_service
+      context: .
+      dockerfile: services/frontend_service/Dockerfile
     image: sonny-frontend
     ports:
       # Override external port via FRONTEND_PORT env var; defaults to 8501
