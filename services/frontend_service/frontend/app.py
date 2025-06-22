@@ -13,12 +13,14 @@ try:
     from frontend.components.gold import gold_ui
     from frontend.components.cinnabar import cinnabar_ui
     from frontend.components.combined import combined_ui
+    from frontend.components.autonomous_testing import autonomous_testing_ui
 except ModuleNotFoundError:
     from components.home import home_page
     from components.silver import silver_ui
     from components.gold import gold_ui
     from components.cinnabar import cinnabar_ui
     from components.combined import combined_ui
+    from components.autonomous_testing import autonomous_testing_ui
 # Expose core classes/functions for UI components and test overrides
 
 
@@ -26,7 +28,7 @@ def main():
     st.sidebar.title("Sonny Navigation")
     choice = st.sidebar.radio(
         "Choose Path",
-        ["Home", "Silver", "Gold", "Cinnabar", "Combined"],
+        ["Home", "Silver", "Gold", "Cinnabar", "Combined", "Autonomous Testing"],
     )
     if choice == "Home":
         home_page()
@@ -38,6 +40,8 @@ def main():
         cinnabar_ui()
     elif choice == "Combined":
         combined_ui()
+    elif choice == "Autonomous Testing":
+        autonomous_testing_ui()
 
 if __name__ == "__main__":
     main()
