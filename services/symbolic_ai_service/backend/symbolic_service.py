@@ -15,6 +15,21 @@ from backend.core.codex_auto import generate_script, modify_script
 from backend.cinnabar.advanced import analyze_text, plan_tasks, retrieve_memory
 from backend.cinnabar.maturity import contextual_understanding, handle_complex_query, nuanced_response
 
+# Symbolic logger for main endpoint
+import logging
+import os
+from datetime import datetime
+SYMBOLIC_LOGFILE = os.path.abspath(
+    os.path.join(os.path.dirname(__file__), "../logs/symbolic_reasoning.log")
+)
+def log_symbolic(reason: str):
+    ts = datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S")
+    try:
+        with open(SYMBOLIC_LOGFILE, "a", encoding="utf-8") as f:
+            f.write(f"[{ts}] {reason}\n")
+    except Exception as exc:
+        print(f"SymbolicAI LOG ERROR: {exc} for log line: {reason}")
+
 class TextRequest(BaseModel):
     text: str
 
@@ -29,11 +44,14 @@ async def startup_event():
 
 @app.post("/interpret/")
 async def interpret_endpoint(req: TextRequest):
-    """Interpret user text to intent."""
+    """Interpret user text to intent (clearly and robustly logged)."""
+    log_symbolic(f"API /interpret/ called with: '{req.text}'")
     try:
         intent = interpret_input(req.text)
+        log_symbolic(f"interpret_input result: {intent[:200]}")
         return {"intent": intent}
     except Exception as e:
+        log_symbolic(f"Exception in /interpret/: {str(e)}")
         raise HTTPException(status_code=400, detail=str(e))
 
 @app.post("/respond/")
