@@ -13,6 +13,7 @@ from backend.cinnabar.nlu import interpret_input
 from backend.cinnabar.response import generate_response
 from backend.core.codex_auto import generate_script, modify_script
 from backend.cinnabar.advanced import analyze_text, plan_tasks, retrieve_memory
+from backend.cinnabar.maturity import contextual_understanding, handle_complex_query, nuanced_response
 
 class TextRequest(BaseModel):
     text: str
@@ -80,5 +81,41 @@ async def memory_endpoint(key: str):
     try:
         mem = retrieve_memory(key)
         return mem
+    except Exception as e:
+        raise HTTPException(status_code=400, detail=str(e))
+
+class ContextualRequest(BaseModel):
+    text: str
+    history: list
+
+class ComplexQueryRequest(BaseModel):
+    query: str
+    context: dict
+
+class NuanceRequest(BaseModel):
+    text: str
+    tone: str = "neutral"
+
+@app.post("/contextual/")
+async def contextual_endpoint(req: ContextualRequest):
+    """Perform contextual understanding based on conversation history."""
+    try:
+        return contextual_understanding(req.text, req.history)
+    except Exception as e:
+        raise HTTPException(status_code=400, detail=str(e))
+
+@app.post("/complex_query/")
+async def complex_query_endpoint(req: ComplexQueryRequest):
+    """Handle complex multi-step queries with advanced reasoning."""
+    try:
+        return handle_complex_query(req.query, req.context)
+    except Exception as e:
+        raise HTTPException(status_code=400, detail=str(e))
+
+@app.post("/nuanced_respond/")
+async def nuanced_endpoint(req: NuanceRequest):
+    """Generate a nuanced response with specified tone modulation."""
+    try:
+        return nuanced_response(req.text, req.tone)
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
