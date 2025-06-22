@@ -49,3 +49,9 @@ As the Royal Diadem agent, I will use the GOLD tool to send a message to Metatro
 Tool Choice: GOLD
 
 As the Royal Diadem agent, I will use the GOLD tool to send a message to Metat
+[2025-06-22 21:38:50] [AUTONOMY|INFO] [COMBINED] Received input: Hello!
+[2025-06-22 21:38:51] [AUTONOMY|INFO] [COMBINED] LLM tool decision for 'Hello!': CINNABAR
+[2025-06-22 21:38:51] [AUTONOMY|INFO] [CINNABAR] LLM fallback (responding as symbolic/assistant)
+[2025-06-22 21:38:53] [AUTONOMY|RESULT] [CINNABAR] LLM result: As an AI, I don't have the ability to pick SILVER, GOLD, or CINNABAR. However, I can help you with any questions or tasks you have. How can I assist you today?
+[2025-06-22 21:38:53] [AUTONOMY|OUTCOME] [COMBINED] Outcome: [CINNABAR][LLM RESULT]
+As an AI, I don't have the ability to pick SILVER, GOLD, or CINNABAR. However, I can help you wit
