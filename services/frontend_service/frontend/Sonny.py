@@ -68,21 +68,31 @@ with tabs[0]:
                 st.session_state["messages"].append(("assistant", sonny_text))
                 log_frontend("SONNY", sonny_text)
 
+
     st.divider()
-    st.subheader(":file_folder: Real-Time Logs (Chat/Frontend, Backend, Symbolic AI)")
-    log_col1, log_col2, log_col3 = st.columns(3)
+    st.subheader(":satellite: Real-Time Observability — Backend, Symbolic AI, Error Handling, and Chat Logs")
+    log_col1, log_col2, log_col3, log_col4 = st.columns([1,1,1,1])
     with log_col1:
         st.markdown("**Frontend (chat) log**")
-        log_lines = read_tail(frontend_log_path)
+        log_lines = read_tail(frontend_log_path, n=40)
         st.code("\n".join(log_lines), language="none")
     with log_col2:
         st.markdown("**Backend Autonomy log**")
-        backend_lines = read_tail(backend_log_path)
+        backend_lines = read_tail(backend_log_path, n=40)
         st.code("\n".join(backend_lines), language="none")
     with log_col3:
         st.markdown("**Symbolic AI log**")
-        symbolic_lines = read_tail(symbolic_log_path)
+        symbolic_lines = read_tail(symbolic_log_path, n=40)
         st.code("\n".join(symbolic_lines), language="none")
+    with log_col4:
+        # Additional real-time ERROR log
+        error_log_path = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..", "..", "backend_core_service", "logs", "error_handling.log"))
+        st.markdown("**Backend Errors** ")
+        error_lines = read_tail(error_log_path, n=40)
+        st.code("\n".join(error_lines), language="none")
+
+    # Allow real-time observability with explicit refresh
+    st.button("🔄 Refresh All Logs", on_click=lambda: None)
 
 # ---- 2. SILVER ----
 with tabs[1]:
