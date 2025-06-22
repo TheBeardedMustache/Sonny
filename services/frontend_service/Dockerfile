@@ -1,3 +1,4 @@
+syntax = docker/dockerfile:1.4
 FROM python:3.11-slim
 
 ENV PYTHONUNBUFFERED=1
@@ -6,14 +7,19 @@ ENV PYTHONUNBUFFERED=1
 # Install dependencies
 WORKDIR /app
 COPY services/frontend_service/requirements.txt /app/requirements.txt
-RUN apt-get update && apt-get install -y \
+# Cache apt packages across builds
+RUN --mount=type=cache,target=/var/cache/apt \
+    apt-get update && apt-get install -y \
         curl \
         xvfb \
         x11-utils \
         x11-xserver-utils \
-    && rm -rf /var/lib/apt/lists/* \
-    && pip install --upgrade pip \
-    && pip install --no-cache-dir -r /app/requirements.txt
+    && rm -rf /var/lib/apt/lists/*
+
+# Cache pip downloads across builds
+RUN --mount=type=cache,target=/root/.cache/pip \
+    pip install --upgrade pip && \
+    pip install --no-cache-dir -r /app/requirements.txt
 
 # Copy application code
 # Copy frontend application
