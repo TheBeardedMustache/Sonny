@@ -6,7 +6,9 @@ ENV PYTHONUNBUFFERED=1
 # Install dependencies
 WORKDIR /app
 COPY requirements.txt /app/
-RUN pip install --upgrade pip && \
+# Install curl for healthchecks and Python dependencies
+RUN apt-get update && apt-get install -y curl && rm -rf /var/lib/apt/lists/* \
+ && pip install --upgrade pip && \
     pip install --no-cache-dir -r requirements.txt && \
     pip install --no-cache-dir flask requests flask-talisman python-json-logger prometheus_client
 
@@ -17,7 +19,7 @@ COPY . /app
 EXPOSE 8000
 
 # Healthcheck for container
-HEALTHCHECK --interval=30s --timeout=5s --start-period=5s --retries=3 \
+HEALTHCHECK --interval=30s --timeout=5s --start-period=15s --retries=3 \
   CMD curl -f http://localhost:8000/healthz || exit 1
 
 # Launch Flask proxy for FastAPI core

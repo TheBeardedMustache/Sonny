@@ -6,7 +6,8 @@ ENV PYTHONUNBUFFERED=1
 # Install dependencies
 WORKDIR /app
 COPY services/frontend_service/requirements.txt /app/requirements.txt
-RUN pip install --upgrade pip && \
+RUN apt-get update && apt-get install -y curl && rm -rf /var/lib/apt/lists/* \
+ && pip install --upgrade pip && \
     pip install --no-cache-dir -r /app/requirements.txt
 
 # Copy application code
@@ -19,7 +20,7 @@ COPY services/backend_core_service/backend /app/backend
 EXPOSE 8501
 
 # Healthcheck for container (ensure the Streamlit app is running)
-HEALTHCHECK --interval=30s --timeout=5s --start-period=5s --retries=3 \
+HEALTHCHECK --interval=30s --timeout=5s --start-period=15s --retries=3 \
   CMD curl -f http://localhost:8501/ || exit 1
 
 # Launch Streamlit UI directly on 0.0.0.0:8501 (WebSocket support)
