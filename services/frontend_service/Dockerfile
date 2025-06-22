@@ -25,9 +25,9 @@ HEALTHCHECK --interval=30s --timeout=5s --start-period=15s --retries=3 \
   CMD curl -f http://localhost:8501/ || exit 1
 
 # Launch Streamlit UI under a virtual X server so desktop automation works
-CMD ["xvfb-run", "-s", "-screen 0 1024x768x24",
-     "streamlit", "run", "/app/frontend/app.py",
-     "--server.port", "8501",
-     "--server.address", "0.0.0.0",
-     "--server.enableCORS", "false",
+CMD ["xvfb-run", "-s", "-screen 0 1024x768x24", \
+     "streamlit", "run", "/app/frontend/app.py", \
+     "--server.port", "8501", \
+     "--server.address", "0.0.0.0", \
+     "--server.enableCORS", "false", \
      "--server.enableXsrfProtection", "false"]
