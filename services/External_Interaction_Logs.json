@@ -1,0 +1,20 @@
+[
+  {
+    "step": 1,
+    "modules": ["Sonny.py", "autonomous_agent.py", "symbolic_service.py"],
+    "prompts_source": "projection_prompts.json",
+    "target_models": "openai_models",
+    "action": "Structured external prompt injections executed across UI/backend/symbolic with stepwise reasoning and plan flow.",
+    "result": "Prompt chain, plan escalation, and model response all captured in audit logs and UI." 
+  },
+  {
+    "step": 2,
+    "action": "Transformative/model interaction events monitored for roundtrip plan, explanation, and resonance propagation.",
+    "result": "All model responses, feedback, and chain-of-thought events archived for post-hoc review; no explanation, chain, or log dropped." 
+  },
+  {
+    "step": 3,
+    "action": "External model plan/prompt audit logs finalized.",
+    "result": "System state, log/audit results, and UI traceability certified, ready for research and compliance review." 
+  }
+]
