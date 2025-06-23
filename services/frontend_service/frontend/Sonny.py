@@ -57,7 +57,7 @@ with tabs[0]:
         with st.chat_message("assistant"):
             with st.spinner("Sonny is thinking..."):
                 try:
-                    from backend.core.autonomous_agent import AutonomousAgent
+                    from services.backend_core_service.backend.core.autonomous_agent import AutonomousAgent
                     agent = AutonomousAgent(system_prompt="You are Sonny, backend autonomy agent for unified chat. Log and explain each step.")
                     sonny_text = agent.process_chat(user_text)
                 except Exception as ex:
