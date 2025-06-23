@@ -3,7 +3,7 @@ import os
 import logging
 from openai import OpenAI
 from dotenv import load_dotenv
-from backend.core.core_agent import symbolic_state
+from services.backend_core_service.backend.core.core_agent import symbolic_state
 from pydantic import BaseModel, ValidationError, validator
 
 class ResponseInput(BaseModel):

@@ -1,3 +1,4 @@
+import os
 # api.py: FastAPI endpoints for Sonny platform
 import logging
 import os
@@ -5,9 +6,9 @@ from dotenv import load_dotenv
 load_dotenv()
 from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
-from backend.core.core_agent import process_request, symbolic_state
+from services.backend_core_service.backend.core.core_agent import process_request, symbolic_state
 import httpx
-from backend.core.autonomy import generate_proactive_plan, predict_next_actions
+from services.backend_core_service.backend.core.autonomy import generate_proactive_plan, predict_next_actions
 
 # URL for Symbolic AI microservice
 SYMBOLIC_AI_URL = os.getenv("SYMBOLIC_AI_URL", "http://127.0.0.1:8001")

@@ -145,8 +145,8 @@ class GoldAutomation:
             raise
 
 # Mercury & Cinnabar Integration
-import backend.cinnabar.nlu as nlu
-import backend.cinnabar.response as response
+import services.backend_core_service.backend.cinnabar.nlu as nlu
+import services.backend_core_service.backend.cinnabar.response as response
 
 def process_request(text: str) -> str:
     """Unified reasoning for process_request: interpret, reason, and respond with explicit logging."""
