@@ -1,3 +1,4 @@
+import os
 """
 autonomous_agent.py: Advanced Autonomous Agent for proactive coding and symbolic intelligence.
 """
@@ -9,15 +10,19 @@ logger = logging.getLogger(__name__)
 
 class AutonomousAgent:
     """Sophic Mercury: Dynamic autonomous coding agent."""
-    def __init__(self, system_prompt: str = "You are an autonomous Python code engineer."): 
+    def __init__(self, system_prompt: str = "You are an autonomous Python code engineer.", model: str = "ft:gpt-4o-2024-08-06:churchofadeptus:sonny-philosophersstone-v1:BlRr0kpo"): 
+        # Use fine-tuned model by default; inject chat history context aware LLMClient.
         self.llm = LLMClient(
             system_prompt=system_prompt,
-            model="gpt-4",
+            model=model,
             max_tokens=1024,
             temperature=0.5,
             symbolic_state=symbolic_state,
         )
         self.state = symbolic_state
+
+    def chat_with_context(self, user_text: str):
+        return self.llm.with_history_context(user_text)
 
     def generate_and_refine(self, prompt: str) -> str:
         """Generate initial code and refine it iteratively."""

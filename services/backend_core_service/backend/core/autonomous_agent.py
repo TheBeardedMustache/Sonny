@@ -1,15 +1,21 @@
+import os
 """
 autonomous_agent.py: Unified Royal Diadem Backend—explicitly integrates 'silver', 'gold', 'cinnabar', 'combined' (decision/logic and logging)
 Each action is logged to 'backend_core_service/logs/autonomy_log.log' with explicit tags and rationales, and to 'backend_core_service/logs/autonomy_enhancements.log' for Sophic Mercury reasoning.
+
+Fine-tuned model integration: default model is now 'ft:gpt-4o-2024-08-06:churchofadeptus:sonny-philosophersstone-v1:BlRr0kpo'. To override, pass 'model=...' explicitly.
 """
 import os
 import logging
 from datetime import datetime
 import subprocess
-from backend.cinnabar.base import LLMClient
-from backend.core.core_agent import symbolic_state
+from services.backend_core_service.backend.cinnabar.base import LLMClient
+from services.backend_core_service.backend.core.core_agent import symbolic_state
 # Sophic Mercury advanced reasoning integration
-from backend.cinnabar.advanced import analyze_text, plan_tasks
+try:
+    from services.backend_core_service.backend.cinnabar.advanced import analyze_text, plan_tasks
+except (ImportError, SystemError, ValueError):
+    from services.backend_core_service.backend.cinnabar.advanced import analyze_text, plan_tasks
 # Log explicit integration steps
 _autonomy_enhancements_log = os.path.abspath(os.path.join(os.path.dirname(__file__), '../../logs/autonomy_enhancements.log'))
 def log_sophic_autonomy(message: str):
@@ -95,10 +101,11 @@ class AutonomousAgent:
     Sophic Mercury: Each step now uses explicit symbolic/log_sophic_autonomy reasoning
     - Tool selection and result, as well as all actions, are logged to autonomy_log.log and autonomy_enhancements.log
     """
-    def __init__(self, system_prompt: str = "You are an explicit autonomous Python agent."):
+    def __init__(self, system_prompt: str = "You are an explicit autonomous Python agent.", model: str = "ft:gpt-4o-2024-08-06:churchofadeptus:sonny-philosophersstone-v1:BlRr0kpo"): 
+        # Use fine-tuned model by default for all LLM calls.
         self.llm = LLMClient(
             system_prompt=system_prompt,
-            model="gpt-4",
+            model=model,
             max_tokens=1024,
             temperature=0.5,
             symbolic_state=symbolic_state,
@@ -146,7 +153,7 @@ class AutonomousAgent:
             f"Symbolic state summary: {context}\n"
             f"User Request: {user_input}\nType (SILVER/GOLD/CINNABAR):"
         )
-        decision_type = self.llm.chat(decision_prompt).strip().upper()
+        decision_type = self.llm.with_history_context(decision_prompt).strip().upper()
         log.append(f"[SOPHIC] LLM tool decision: {decision_type}")
         log_autonomy(f"[SOPHIC] LLM tool decision (Sophic context) for '{user_input}': {decision_type}")
         log_sophic_autonomy(f"Sophic Mercury tool decision: {decision_type}")
@@ -180,7 +187,7 @@ class AutonomousAgent:
                 log.append(f"[CINNABAR] Tool selected: LLM/Assistant/Response (Virtue philosophical fallback).")
                 log_autonomy("[CINNABAR] LLM fallback (Virtue philosophical reasoning)")
                 log_sophic_autonomy("LLM fallback, symbolic reasoning/response (Sophic)")
-                symbolic_result = self.llm.chat(user_input)
+                symbolic_result = self.llm.with_history_context(user_input)
                 result = f"[CINNABAR][LLM RESULT]\n{symbolic_result}"
                 log_autonomy(f"[CINNABAR] LLM result: {symbolic_result[:200]}", level="RESULT")
                 log_sophic_autonomy(f"LLM result (Sophic): {symbolic_result[:200]}")

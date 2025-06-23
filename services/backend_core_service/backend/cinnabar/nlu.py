@@ -3,8 +3,8 @@ import logging
 import os
 from openai import OpenAI
 from pydantic import BaseModel, validator, ValidationError
-from backend.cinnabar.base import LLMClient
-from backend.core.core_agent import symbolic_state
+from services.backend_core_service.backend.cinnabar.base import LLMClient
+from services.backend_core_service.backend.core.core_agent import symbolic_state
 
 logger = logging.getLogger(__name__)
 # Initialize LLM client for interpretation
