@@ -22,3 +22,5 @@
 [2025-06-23 13:15:45] [read_tail] /mnt/sonny/services/logs/chat_interactions.log: tail read (40 lines) via Streamlit UI
 [2025-06-23 13:15:51] [read_tail] /mnt/sonny/services/logs/chat_interactions.log: tail read (40 lines) via Streamlit UI
 [2025-06-23 13:15:55] [read_tail] /mnt/sonny/services/logs/chat_interactions.log: tail read (40 lines) via Streamlit UI
+[2025-06-23 14:01:10] [read_tail] /mnt/sonny/services/logs/chat_interactions.log: tail read (40 lines) via Streamlit UI
+[2025-06-23 14:01:27] [read_tail] /mnt/sonny/services/logs/chat_interactions.log: tail read (40 lines) via Streamlit UI

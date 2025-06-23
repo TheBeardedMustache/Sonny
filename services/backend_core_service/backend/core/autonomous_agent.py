@@ -173,7 +173,7 @@ class AutonomousAgent:
                 log.append(f"[GOLD] Tool selected: CODEX CLI (Virtue code-gen)")
                 log_autonomy("[GOLD] Using Codex/Codex-auto for code generation (Virtue mode).")
                 log_sophic_autonomy("GOLD (CODEX) tool selected, generating script.")
-                from backend.core import codex_auto
+                from services.backend_core_service.backend.core import codex_auto
                 code_result = codex_auto.generate_script(user_input)
                 result = f"[GOLD][CODEX OUTPUT]\n{code_result}"
                 log_autonomy(f"[GOLD] CODEX result: {code_result[:200]}", level="RESULT")

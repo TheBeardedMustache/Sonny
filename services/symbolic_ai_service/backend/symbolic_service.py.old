@@ -1,0 +1,247 @@
+from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI, HTTPException
+pp = FastAPI(title="Sonny Symbolic AI Service", version="1.0")
+
+pp = FastAPI(title="Sonny Symbolic AI Service", version="1.0")
+
+pp = FastAPI(title="Sonny Symbolic AI Service", version="1.0")
+
+pp = FastAPI(title="Sonny Symbolic AI Service", version="1.0")
+# --- Provide search/context endpoint for chat history ---
+pp = FastAPI(title="Sonny Symbolic AI Service", version="1.0")
+
+pp = FastAPI(title="Sonny Symbolic AI Service", version="1.0")
+from services.symbolic_ai_service.backend.core import chat_history_kb
+pp = FastAPI(title="Sonny Symbolic AI Service", version="1.0")
+
+pp = FastAPI(title="Sonny Symbolic AI Service", version="1.0")
+
+pp = FastAPI(title="Sonny Symbolic AI Service", version="1.0")
+
+pp = FastAPI(title="Sonny Symbolic AI Service", version="1.0")
+@app.post("/history_search/")
+pp = FastAPI(title="Sonny Symbolic AI Service", version="1.0")
+
+pp = FastAPI(title="Sonny Symbolic AI Service", version="1.0")
+async def history_search(req: HistoryRequest):
+pp = FastAPI(title="Sonny Symbolic AI Service", version="1.0")
+
+pp = FastAPI(title="Sonny Symbolic AI Service", version="1.0")
+    """Search or retrieve recent N conversation turns."""
+pp = FastAPI(title="Sonny Symbolic AI Service", version="1.0")
+
+pp = FastAPI(title="Sonny Symbolic AI Service", version="1.0")
+    if req.query.strip():
+pp = FastAPI(title="Sonny Symbolic AI Service", version="1.0")
+
+pp = FastAPI(title="Sonny Symbolic AI Service", version="1.0")
+        hits = chat_history_kb.search_context(req.query, n=req.n)
+pp = FastAPI(title="Sonny Symbolic AI Service", version="1.0")
+
+pp = FastAPI(title="Sonny Symbolic AI Service", version="1.0")
+    else:
+pp = FastAPI(title="Sonny Symbolic AI Service", version="1.0")
+
+pp = FastAPI(title="Sonny Symbolic AI Service", version="1.0")
+        hits = chat_history_kb.last_n_turns(req.n)
+pp = FastAPI(title="Sonny Symbolic AI Service", version="1.0")
+
+pp = FastAPI(title="Sonny Symbolic AI Service", version="1.0")
+    return {"messages": hits}
+pp = FastAPI(title="Sonny Symbolic AI Service", version="1.0")
+
+pp = FastAPI(title="Sonny Symbolic AI Service", version="1.0")
+"""
+pp = FastAPI(title="Sonny Symbolic AI Service", version="1.0")
+
+pp = FastAPI(title="Sonny Symbolic AI Service", version="1.0")
+symbolic_service.py: FastAPI service for symbolic reasoning and Codex AI interactions.
+pp = FastAPI(title="Sonny Symbolic AI Service", version="1.0")
+
+pp = FastAPI(title="Sonny Symbolic AI Service", version="1.0")
+"""
+pp = FastAPI(title="Sonny Symbolic AI Service", version="1.0")
+
+pp = FastAPI(title="Sonny Symbolic AI Service", version="1.0")
+from dotenv import load_dotenv
+pp = FastAPI(title="Sonny Symbolic AI Service", version="1.0")
+
+pp = FastAPI(title="Sonny Symbolic AI Service", version="1.0")
+
+pp = FastAPI(title="Sonny Symbolic AI Service", version="1.0")
+
+pp = FastAPI(title="Sonny Symbolic AI Service", version="1.0")
+load_dotenv()
+pp = FastAPI(title="Sonny Symbolic AI Service", version="1.0")
+
+pp = FastAPI(title="Sonny Symbolic AI Service", version="1.0")
+
+pp = FastAPI(title="Sonny Symbolic AI Service", version="1.0")
+
+pp = FastAPI(title="Sonny Symbolic AI Service", version="1.0")
+
+pp = FastAPI(title="Sonny Symbolic AI Service", version="1.0")
+from services.backend_core_service.backend.core.autonomous_agent import AutonomousAgent
+pp = FastAPI(title="Sonny Symbolic AI Service", version="1.0")
+
+pp = FastAPI(title="Sonny Symbolic AI Service", version="1.0")
+
+pp = FastAPI(title="Sonny Symbolic AI Service", version="1.0")
+
+pp = FastAPI(title="Sonny Symbolic AI Service", version="1.0")
+# Robust logger to symbolic_reasoning.log
+pp = FastAPI(title="Sonny Symbolic AI Service", version="1.0")
+
+pp = FastAPI(title="Sonny Symbolic AI Service", version="1.0")
+from datetime import datetime
+pp = FastAPI(title="Sonny Symbolic AI Service", version="1.0")
+
+pp = FastAPI(title="Sonny Symbolic AI Service", version="1.0")
+SYMBOLIC_LOGFILE = os.path.abspath(
+pp = FastAPI(title="Sonny Symbolic AI Service", version="1.0")
+
+pp = FastAPI(title="Sonny Symbolic AI Service", version="1.0")
+    os.path.join(os.path.dirname(__file__), "../logs/symbolic_reasoning.log")
+pp = FastAPI(title="Sonny Symbolic AI Service", version="1.0")
+
+pp = FastAPI(title="Sonny Symbolic AI Service", version="1.0")
+)
+pp = FastAPI(title="Sonny Symbolic AI Service", version="1.0")
+
+pp = FastAPI(title="Sonny Symbolic AI Service", version="1.0")
+def log_symbolic(reason: str, level: str = "INFO"):
+pp = FastAPI(title="Sonny Symbolic AI Service", version="1.0")
+
+pp = FastAPI(title="Sonny Symbolic AI Service", version="1.0")
+    ts = datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S")
+pp = FastAPI(title="Sonny Symbolic AI Service", version="1.0")
+
+pp = FastAPI(title="Sonny Symbolic AI Service", version="1.0")
+    try:
+pp = FastAPI(title="Sonny Symbolic AI Service", version="1.0")
+
+pp = FastAPI(title="Sonny Symbolic AI Service", version="1.0")
+        with open(SYMBOLIC_LOGFILE, "a", encoding="utf-8") as f:
+pp = FastAPI(title="Sonny Symbolic AI Service", version="1.0")
+
+pp = FastAPI(title="Sonny Symbolic AI Service", version="1.0")
+            f.write(f"[{ts}] [SYMBOLIC-AI|{level}] {reason}\n")
+pp = FastAPI(title="Sonny Symbolic AI Service", version="1.0")
+
+pp = FastAPI(title="Sonny Symbolic AI Service", version="1.0")
+    except Exception as exc:
+pp = FastAPI(title="Sonny Symbolic AI Service", version="1.0")
+
+pp = FastAPI(title="Sonny Symbolic AI Service", version="1.0")
+        print(f"SymbolicAI LOG ERROR: {exc} for log line: {reason}")
+pp = FastAPI(title="Sonny Symbolic AI Service", version="1.0")
+
+pp = FastAPI(title="Sonny Symbolic AI Service", version="1.0")
+
+pp = FastAPI(title="Sonny Symbolic AI Service", version="1.0")
+
+pp = FastAPI(title="Sonny Symbolic AI Service", version="1.0")
+class SymbolicRequest(BaseModel):
+pp = FastAPI(title="Sonny Symbolic AI Service", version="1.0")
+
+pp = FastAPI(title="Sonny Symbolic AI Service", version="1.0")
+    text: str
+pp = FastAPI(title="Sonny Symbolic AI Service", version="1.0")
+
+pp = FastAPI(title="Sonny Symbolic AI Service", version="1.0")
+
+pp = FastAPI(title="Sonny Symbolic AI Service", version="1.0")
+
+pp = FastAPI(title="Sonny Symbolic AI Service", version="1.0")
+@app.on_event("startup")
+pp = FastAPI(title="Sonny Symbolic AI Service", version="1.0")
+
+pp = FastAPI(title="Sonny Symbolic AI Service", version="1.0")
+async def startup_event():
+pp = FastAPI(title="Sonny Symbolic AI Service", version="1.0")
+
+pp = FastAPI(title="Sonny Symbolic AI Service", version="1.0")
+    api_key = os.getenv("OPENAI_API_KEY")
+pp = FastAPI(title="Sonny Symbolic AI Service", version="1.0")
+
+pp = FastAPI(title="Sonny Symbolic AI Service", version="1.0")
+    if not api_key:
+pp = FastAPI(title="Sonny Symbolic AI Service", version="1.0")
+
+pp = FastAPI(title="Sonny Symbolic AI Service", version="1.0")
+        raise RuntimeError("OPENAI_API_KEY not set")
+pp = FastAPI(title="Sonny Symbolic AI Service", version="1.0")
+
+pp = FastAPI(title="Sonny Symbolic AI Service", version="1.0")
+
+pp = FastAPI(title="Sonny Symbolic AI Service", version="1.0")
+
+pp = FastAPI(title="Sonny Symbolic AI Service", version="1.0")
+# --- Unified symbolic endpoint (single POST) ---
+pp = FastAPI(title="Sonny Symbolic AI Service", version="1.0")
+
+pp = FastAPI(title="Sonny Symbolic AI Service", version="1.0")
+@app.post("/symbolic/")
+pp = FastAPI(title="Sonny Symbolic AI Service", version="1.0")
+
+pp = FastAPI(title="Sonny Symbolic AI Service", version="1.0")
+async def symbolic_endpoint(req: SymbolicRequest):
+pp = FastAPI(title="Sonny Symbolic AI Service", version="1.0")
+
+pp = FastAPI(title="Sonny Symbolic AI Service", version="1.0")
+    """
+pp = FastAPI(title="Sonny Symbolic AI Service", version="1.0")
+
+pp = FastAPI(title="Sonny Symbolic AI Service", version="1.0")
+    Unified endpoint: Accepts a symbolic reasoning request and proxies to Sonny's backend autonomous agent.
+pp = FastAPI(title="Sonny Symbolic AI Service", version="1.0")
+
+pp = FastAPI(title="Sonny Symbolic AI Service", version="1.0")
+    Logs request, explicit tool path, reasoning, and ultimate result.
+pp = FastAPI(title="Sonny Symbolic AI Service", version="1.0")
+
+pp = FastAPI(title="Sonny Symbolic AI Service", version="1.0")
+    """
+pp = FastAPI(title="Sonny Symbolic AI Service", version="1.0")
+
+pp = FastAPI(title="Sonny Symbolic AI Service", version="1.0")
+    log_symbolic(f"API /symbolic/ called with: '{req.text}'")
+pp = FastAPI(title="Sonny Symbolic AI Service", version="1.0")
+
+pp = FastAPI(title="Sonny Symbolic AI Service", version="1.0")
+    try:
+pp = FastAPI(title="Sonny Symbolic AI Service", version="1.0")
+
+pp = FastAPI(title="Sonny Symbolic AI Service", version="1.0")
+        agent = AutonomousAgent(system_prompt="You are Sonny, a robust explicit symbolic autonomy agent for NLU and backend integration.")
+pp = FastAPI(title="Sonny Symbolic AI Service", version="1.0")
+
+pp = FastAPI(title="Sonny Symbolic AI Service", version="1.0")
+        output = agent.reason_decide_act(req.text)
+pp = FastAPI(title="Sonny Symbolic AI Service", version="1.0")
+
+pp = FastAPI(title="Sonny Symbolic AI Service", version="1.0")
+        final_result = output.get("result") or ""
+pp = FastAPI(title="Sonny Symbolic AI Service", version="1.0")
+
+pp = FastAPI(title="Sonny Symbolic AI Service", version="1.0")
+        log_symbolic(f"Symbolic backend result: {final_result[:200]}", level="RESULT")
+pp = FastAPI(title="Sonny Symbolic AI Service", version="1.0")
+
+pp = FastAPI(title="Sonny Symbolic AI Service", version="1.0")
+        return {"result": final_result, "decision": output.get("decision"), "log": output.get("log")}
+pp = FastAPI(title="Sonny Symbolic AI Service", version="1.0")
+
+pp = FastAPI(title="Sonny Symbolic AI Service", version="1.0")
+    except Exception as e:
+pp = FastAPI(title="Sonny Symbolic AI Service", version="1.0")
+
+pp = FastAPI(title="Sonny Symbolic AI Service", version="1.0")
+        log_symbolic(f"Exception in /symbolic/: {str(e)}", level="ERROR")
+pp = FastAPI(title="Sonny Symbolic AI Service", version="1.0")
+
+pp = FastAPI(title="Sonny Symbolic AI Service", version="1.0")
+        raise HTTPException(status_code=400, detail=str(e))
+pp = FastAPI(title="Sonny Symbolic AI Service", version="1.0")
+
+pp = FastAPI(title="Sonny Symbolic AI Service", version="1.0")
